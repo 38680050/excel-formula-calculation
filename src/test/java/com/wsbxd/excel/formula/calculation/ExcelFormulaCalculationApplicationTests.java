@@ -31,10 +31,11 @@ class ExcelFormulaCalculationApplicationTests {
         }};
         long start = System.currentTimeMillis();
         BookCalculate<ExcelNumber> bookCalculate = new BookCalculate<>(excels, ExcelNumber.class);
-        bookCalculate.calculateChangeValue("交易性-股票", "N3=现金!A1*银行存款!C1+ABS(MIN(O2+2,银行存款!B3:银行存款!E5)*2-MAX('交易性-股票'!A1:'交易性-股票'!D3))+MAX(现金!A2:现金!O3)");
+        String result = bookCalculate.calculate("交易性-股票", "N3=现金!A1*银行存款!C1+ABS(MIN(O2+2,银行存款!B3:银行存款!E5)*2-MAX('交易性-股票'!A1:'交易性-股票'!D3))+MAX(现金!A2:现金!O3)");
         bookCalculate.integrationResult();
         System.out.println("-------------------------------------------------");
         System.out.println(System.currentTimeMillis() - start + "ms");
+        System.out.println(result);
     }
 
     /**
@@ -51,10 +52,11 @@ class ExcelFormulaCalculationApplicationTests {
         }};
         long start = System.currentTimeMillis();
         BookCalculate<ExcelUUID> bookCalculate = new BookCalculate<>(excels, ExcelUUID.class);
-        bookCalculate.calculateChangeValue("交易性-股票", "N3bbd420f-3ce3-11ea-a676-00163e048143=现金!A1bbd420f-3ce3-11ea-a676-00163e048143*银行存款!C1bbd420f-3ce3-11ea-a676-00163e048143+ABS(MIN(O2bbd420f-3ce3-11ea-a676-00163e048143+2,银行存款!B3bbd420f-3ce3-11ea-a676-00163e048143:银行存款!E5bbd420f-3ce3-11ea-a676-00163e048143)*2-MAX('交易性-股票'!A1bbd420f-3ce3-11ea-a676-00163e048143:'交易性-股票'!D3bbd420f-3ce3-11ea-a676-00163e048143))+MAX(现金!A2bbd420f-3ce3-11ea-a676-00163e048143:现金!O3bbd420f-3ce3-11ea-a676-00163e048143)");
+        String result = bookCalculate.calculate("交易性-股票", "N3bbd420f-3ce3-11ea-a676-00163e048143=现金!A1bbd420f-3ce3-11ea-a676-00163e048143*银行存款!C1bbd420f-3ce3-11ea-a676-00163e048143+ABS(MIN(O2bbd420f-3ce3-11ea-a676-00163e048143+2,银行存款!B3bbd420f-3ce3-11ea-a676-00163e048143:银行存款!E5bbd420f-3ce3-11ea-a676-00163e048143)*2-MAX('交易性-股票'!A1bbd420f-3ce3-11ea-a676-00163e048143:'交易性-股票'!D3bbd420f-3ce3-11ea-a676-00163e048143))+MAX(现金!A2bbd420f-3ce3-11ea-a676-00163e048143:现金!O3bbd420f-3ce3-11ea-a676-00163e048143)");
         bookCalculate.integrationResult();
         System.out.println("-------------------------------------------------");
         System.out.println(System.currentTimeMillis() - start + "ms");
+        System.out.println(result);
     }
 
 //    /**
