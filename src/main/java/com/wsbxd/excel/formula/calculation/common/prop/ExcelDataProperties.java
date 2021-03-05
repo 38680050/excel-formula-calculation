@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * description: Excel 数据属性
+ * description: Excel 实体类 数据属性
  *
  * @author chenhaoxuan
  * @version 1.0
@@ -21,43 +21,94 @@ import java.util.regex.Pattern;
  */
 public class ExcelDataProperties {
 
+    /**
+     * 不带页签数字行单元格匹配
+     */
     private final static Pattern CELL_NUMBER_PATTERN = Pattern.compile("[A-Z]+\\d+");
 
+    /**
+     * 不带页签UUID行单元格匹配
+     */
     private final static Pattern CELL_UUID_PATTERN = Pattern.compile("[A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}");
 
+    /**
+     * 带页签数字行单元格匹配
+     */
     public final static Pattern SHEET_CELL_NUMBER_PATTERN = Pattern.compile("('[^\\\\/?*\\[\\]]+?'![A-Z]+\\d+|[^\\\\/?*\\[\\]():,+-]+?![A-Z]+\\d+|[A-Z]+\\d+)");
 
+    /**
+     * 带页签UUID行单元格匹配
+     */
     public final static Pattern SHEET_CELL_UUID_PATTERN = Pattern.compile("('[^\\\\/?*\\[\\]]+?'![A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}|[^\\\\/?*\\[\\]():,+-]+?![A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}|[A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})");
 
+    /**
+     * 单行列单元格匹配
+     */
+    private final static Pattern COLUMN_CELL_PATTERN = Pattern.compile("(?![A-Z]+\\()([A-Z]+)");
 
-    private final static Pattern COLUMN_PATTERN = Pattern.compile("(?![A-Z]+\\()([A-Z]+)");
-
+    /**
+     * 返回不带页签数字行单元格匹配
+     */
     private final static Pattern RETURN_CELL_NUMBER_PATTERN = Pattern.compile("^[A-Z]+\\d+=");
 
+    /**
+     * 返回不带页签UUID行单元格匹配
+     */
     private final static Pattern RETURN_CELL_UUID_PATTERN = Pattern.compile("^[A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}=");
 
+    /**
+     * 返回带页签数字行单元格匹配
+     */
     public final static Pattern RETURN_SHEET_CELL_NUMBER_PATTERN = Pattern.compile("^('[^\\\\/?*\\[\\]]+?'![A-Z]+\\d+|[^\\\\/?*\\[\\]():,+-]+?![A-Z]+\\d+|[A-Z]+\\d+)=");
 
+    /**
+     * 返回带页签UUID行单元格匹配
+     */
     public final static Pattern RETURN_SHEET_CELL_UUID_PATTERN = Pattern.compile("^('[^\\\\/?*\\[\\]]+?'![A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}|[^\\\\/?*\\[\\]():,+-]+?![A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}|[A-Z]+[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12})=");
 
-    private final static Pattern RETURN_COLUMN_PATTERN = Pattern.compile("^(?![A-Z]+\\()([A-Z]+)=");
 
+    /**
+     * 返回单行列单元格匹配
+     */
+    public final static Pattern RETURN_COLUMN_PATTERN = Pattern.compile("^(?![A-Z]+\\()([A-Z]+)=");
+
+    /**
+     * 唯一标识字段
+     */
     private Field idField;
 
+    /**
+     * 唯一标识类型枚举
+     */
     private ExcelIdTypeEnum excelIdTypeEnum;
 
+    /**
+     * 单元格类型字符集合字段
+     */
     private Field cellTypesField;
 
+    /**
+     * 页签字段
+     */
     private Field sheetField;
 
+    /**
+     * 排序字段
+     */
     private Field sortField;
 
+    /**
+     * 列字段集合
+     */
     private List<Field> columnFieldList;
 
+    /**
+     * Excel 计算类型
+     */
     private ExcelCalculateTypeEnum calculateType;
 
     /**
-     * 不用注解时
+     * 不用注解创建 Excel 实体类 数据属性
      *
      * @param clazz               excel
      * @param idFieldName         id字段名称
@@ -66,10 +117,7 @@ public class ExcelDataProperties {
      * @param sortFieldName       排序字段名称
      * @param columnFieldNameList 列字段名称集合
      */
-    public ExcelDataProperties(
-            ExcelCalculateTypeEnum calculateType, Class<?> clazz, String idFieldName,
-            ExcelIdTypeEnum excelIdTypeEnum, String sheetFieldName, String sortFieldName, List<String> columnFieldNameList
-    ) {
+    public ExcelDataProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz, String idFieldName, ExcelIdTypeEnum excelIdTypeEnum, String sheetFieldName, String sortFieldName, List<String> columnFieldNameList) {
         try {
             this.calculateType = calculateType;
             this.idField = clazz.getDeclaredField(idFieldName);
@@ -89,9 +137,10 @@ public class ExcelDataProperties {
     }
 
     /**
-     * 用注释时
+     * 用注释创建 Excel 实体类 数据属性
      *
-     * @param clazz excel
+     * @param calculateType Excel 计算类型
+     * @param clazz         数据类
      */
     public ExcelDataProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz) {
         this.calculateType = calculateType;
@@ -102,10 +151,8 @@ public class ExcelDataProperties {
                 if (ExcelFieldTypeEnum.CELL.name().equals(excelField.value().name())) {
                     if (null == this.columnFieldList) {
                         this.columnFieldList = new ArrayList<>();
-                        this.columnFieldList.add(field);
-                    } else {
-                        this.columnFieldList.add(field);
                     }
+                    this.columnFieldList.add(field);
                 } else if (ExcelFieldTypeEnum.ID.name().equals(excelField.value().name())) {
                     this.idField = field;
                     this.excelIdTypeEnum = excelField.idType();
@@ -120,42 +167,53 @@ public class ExcelDataProperties {
         }
     }
 
+    /**
+     * 获取返回单元格匹配
+     *
+     * @return 单元格匹配 Pattern
+     */
     public Pattern getReturnCellPattern() {
-        if (ExcelCalculateTypeEnum.BOOK.equals(calculateType)) {
+        if (ExcelCalculateTypeEnum.BOOK.equals(this.calculateType)) {
             if (ExcelIdTypeEnum.NUMBER.equals(excelIdTypeEnum)) {
                 return RETURN_SHEET_CELL_NUMBER_PATTERN;
-            } else if (ExcelIdTypeEnum.UUID.equals(excelIdTypeEnum)) {
+            } else if (ExcelIdTypeEnum.UUID.equals(this.excelIdTypeEnum)) {
                 return RETURN_SHEET_CELL_UUID_PATTERN;
             }
         } else if (ExcelCalculateTypeEnum.SHEET.equals(calculateType)) {
-            if (ExcelIdTypeEnum.NUMBER.equals(excelIdTypeEnum)) {
-                return RETURN_SHEET_CELL_NUMBER_PATTERN;
-            } else if (ExcelIdTypeEnum.UUID.equals(excelIdTypeEnum)) {
-                return RETURN_SHEET_CELL_UUID_PATTERN;
+            if (ExcelIdTypeEnum.NUMBER.equals(this.excelIdTypeEnum)) {
+                return RETURN_CELL_NUMBER_PATTERN;
+            } else if (ExcelIdTypeEnum.UUID.equals(this.excelIdTypeEnum)) {
+                return RETURN_CELL_UUID_PATTERN;
             }
-        } else if (ExcelCalculateTypeEnum.ROW.equals(calculateType)) {
+        } else if (ExcelCalculateTypeEnum.ROW.equals(this.calculateType)) {
             return RETURN_COLUMN_PATTERN;
         }
         return null;
     }
 
+    /**
+     * 根据公式获取单元格字符串集合
+     *
+     * @param formula 公式
+     * @return 单元格字符串集合
+     */
     public List<String> getCellStrListByFormula(String formula) {
         List<String> cellStrList = new ArrayList<>();
         Matcher matcher = null;
-        if (ExcelCalculateTypeEnum.BOOK.equals(calculateType)) {
+        if (ExcelCalculateTypeEnum.BOOK.equals(this.calculateType)) {
             if (ExcelIdTypeEnum.NUMBER.equals(excelIdTypeEnum)) {
                 matcher = SHEET_CELL_NUMBER_PATTERN.matcher(formula);
             } else if (ExcelIdTypeEnum.UUID.equals(excelIdTypeEnum)) {
                 matcher = SHEET_CELL_UUID_PATTERN.matcher(formula);
             }
-        } else if (ExcelCalculateTypeEnum.SHEET.equals(calculateType)) {
+        } else if (ExcelCalculateTypeEnum.SHEET.equals(this.calculateType)) {
             if (ExcelIdTypeEnum.NUMBER.equals(excelIdTypeEnum)) {
                 matcher = CELL_NUMBER_PATTERN.matcher(formula);
             } else if (ExcelIdTypeEnum.UUID.equals(excelIdTypeEnum)) {
                 matcher = CELL_UUID_PATTERN.matcher(formula);
             }
-        } else if (ExcelCalculateTypeEnum.ROW.equals(calculateType)) {
-            matcher = COLUMN_PATTERN.matcher(formula);
+        } else if (ExcelCalculateTypeEnum.ROW.equals(this.calculateType)) {
+            matcher = COLUMN_CELL_PATTERN.matcher(formula);
         }
         while (null != matcher && matcher.find()) {
             cellStrList.add(matcher.group());
