@@ -1,6 +1,7 @@
 package com.wsbxd.excel.formula.calculation;
 
 import com.wsbxd.excel.formula.calculation.module.book.BookCalculate;
+import com.wsbxd.excel.formula.calculation.module.sheet.SheetCalculate;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -59,48 +60,52 @@ class ExcelFormulaCalculationApplicationTests {
         System.out.println(result);
     }
 
-//    /**
-//     * 单页签计算(数字id)
-//     */
-//    @Test
-//    public void sheetNum() {
-//        List<ExcelNumber> excels = new ArrayList<ExcelNumber>() {{
-//            this.add(new ExcelNumber("1", "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, 1));
-//            this.add(new ExcelNumber("2", "4545", null, "74182", null, "0.01", null, null, "6341", null, null, null, "1010%", null, null, "L-3", null, 2));
-//            this.add(new ExcelNumber("3", null, "12323", null, null, "1212", null, null, null, "2011/11/01", "0.4", null, null, "0.2", null, "I-5", null, 3));
-//            this.add(new ExcelNumber("4", null, null, "45%", null, null, null, "85296%", null, null, null, "7474", "2565", null, "44", "C-3;G-3", null, 4));
-//            this.add(new ExcelNumber("5", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, null, null, "777", null, "A-5;B-3;F-5;I-5;K-4;N-3", null, 5));
-//        }};
-//        long start = System.currentTimeMillis();
-//        SheetCalculate<ExcelNumber> sheetCalculate = new SheetCalculate<>(excels, ExcelNumber.class);
-//        sheetCalculate.calculateChangeValue("K5=A1+ABS(MIN(C5+2,A1:I5)*2-MAX(L1:N5))+MAX(A2:J2)");
-//        sheetCalculate.calculateChangeValue("N5=ROUND(2*K5+5,0)");
-//        sheetCalculate.integrationResult();
-//        System.out.println("-------------------------------------------------");
-//        System.out.println(System.currentTimeMillis() - start + "ms");
-//    }
-//
-//    /**
-//     * 单页签计算(uuid)
-//     */
-//    @Test
-//    public void sheetUUID() {
-//        List<ExcelUUID> excels = new ArrayList<ExcelUUID>() {{
-//            this.add(new ExcelUUID("1bbd420f-3ce3-11ea-a676-00163e048143", "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, 1));
-//            this.add(new ExcelUUID("2bbd420f-3ce3-11ea-a676-00163e048143", "4545", null, "74182", null, "0.01", null, null, "6341", null, null, null, "1010%", null, null, "L-3", null, 2));
-//            this.add(new ExcelUUID("3bbd420f-3ce3-11ea-a676-00163e048143", null, "12323", null, null, "1212", null, null, null, "2011/11/01", "0.4", null, null, "0.2", null, "I-5", null, 3));
-//            this.add(new ExcelUUID("4bbd420f-3ce3-11ea-a676-00163e048143", null, null, "45%", null, null, null, "85296%", null, null, null, "7474", "2565", null, "44", "C-3;G-3", null, 4));
-//            this.add(new ExcelUUID("5bbd420f-3ce3-11ea-a676-00163e048143", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, null, null, "777", null, "A-5;B-3;F-5;I-5;K-4;N-3", null, 5));
-//        }};
-//        long start = System.currentTimeMillis();
-//        SheetCalculate<ExcelUUID> sheetCalculate = new SheetCalculate<>(excels, ExcelUUID.class);
-//        sheetCalculate.calculateChangeValue("K5bbd420f-3ce3-11ea-a676-00163e048143=A1bbd420f-3ce3-11ea-a676-00163e048143+ABS(MIN(C5bbd420f-3ce3-11ea-a676-00163e048143+2,A1bbd420f-3ce3-11ea-a676-00163e048143:I5bbd420f-3ce3-11ea-a676-00163e048143)*2-MAX(L1bbd420f-3ce3-11ea-a676-00163e048143:N5bbd420f-3ce3-11ea-a676-00163e048143))+MAX(A2bbd420f-3ce3-11ea-a676-00163e048143:J2bbd420f-3ce3-11ea-a676-00163e048143)");
-//        sheetCalculate.calculateChangeValue("N5bbd420f-3ce3-11ea-a676-00163e048143=ROUND(2*K5bbd420f-3ce3-11ea-a676-00163e048143+5,0)");
-//        sheetCalculate.integrationResult();
-//        System.out.println("-------------------------------------------------");
-//        System.out.println(System.currentTimeMillis() - start + "ms");
-//    }
-//
+    /**
+     * 单页签计算(数字id)
+     */
+    @Test
+    public void sheetNum() {
+        List<ExcelNumber> excels = new ArrayList<ExcelNumber>() {{
+            this.add(new ExcelNumber("1", "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, 1));
+            this.add(new ExcelNumber("2", "4545", null, "74182", null, "0.01", null, null, "6341", null, null, null, "1010%", null, null, "L-3", null, 2));
+            this.add(new ExcelNumber("3", null, "12323", null, null, "1212", null, null, null, "2011/11/01", "0.4", null, null, "0.2", null, "I-5", null, 3));
+            this.add(new ExcelNumber("4", null, null, "45%", null, null, null, "85296%", null, null, null, "7474", "2565", null, "44", "C-3;G-3", null, 4));
+            this.add(new ExcelNumber("5", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, null, null, "777", null, "A-5;B-3;F-5;I-5;K-4;N-3", null, 5));
+        }};
+        long start = System.currentTimeMillis();
+        SheetCalculate<ExcelNumber> sheetCalculate = new SheetCalculate<>(excels, ExcelNumber.class);
+        String result1 = sheetCalculate.calculate("K5=A1+ABS(MIN(C5+2,A1:I5)*2-MAX(L1:N5))+MAX(A2:J2)");
+        String result2 = sheetCalculate.calculate("N5=ROUND(2*K5+5,0)");
+        sheetCalculate.integrationResult();
+        System.out.println("-------------------------------------------------");
+        System.out.println(System.currentTimeMillis() - start + "ms");
+        System.out.println(result1);
+        System.out.println(result2);
+    }
+
+    /**
+     * 单页签计算(uuid)
+     */
+    @Test
+    public void sheetUUID() {
+        List<ExcelUUID> excels = new ArrayList<ExcelUUID>() {{
+            this.add(new ExcelUUID("1bbd420f-3ce3-11ea-a676-00163e048143", "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, 1));
+            this.add(new ExcelUUID("2bbd420f-3ce3-11ea-a676-00163e048143", "4545", null, "74182", null, "0.01", null, null, "6341", null, null, null, "1010%", null, null, "L-3", null, 2));
+            this.add(new ExcelUUID("3bbd420f-3ce3-11ea-a676-00163e048143", null, "12323", null, null, "1212", null, null, null, "2011/11/01", "0.4", null, null, "0.2", null, "I-5", null, 3));
+            this.add(new ExcelUUID("4bbd420f-3ce3-11ea-a676-00163e048143", null, null, "45%", null, null, null, "85296%", null, null, null, "7474", "2565", null, "44", "C-3;G-3", null, 4));
+            this.add(new ExcelUUID("5bbd420f-3ce3-11ea-a676-00163e048143", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, null, null, "777", null, "A-5;B-3;F-5;I-5;K-4;N-3", null, 5));
+        }};
+        long start = System.currentTimeMillis();
+        SheetCalculate<ExcelUUID> sheetCalculate = new SheetCalculate<>(excels, ExcelUUID.class);
+        String result1 = sheetCalculate.calculate("K5bbd420f-3ce3-11ea-a676-00163e048143=A1bbd420f-3ce3-11ea-a676-00163e048143+ABS(MIN(C5bbd420f-3ce3-11ea-a676-00163e048143+2,A1bbd420f-3ce3-11ea-a676-00163e048143:I5bbd420f-3ce3-11ea-a676-00163e048143)*2-MAX(L1bbd420f-3ce3-11ea-a676-00163e048143:N5bbd420f-3ce3-11ea-a676-00163e048143))+MAX(A2bbd420f-3ce3-11ea-a676-00163e048143:J2bbd420f-3ce3-11ea-a676-00163e048143)");
+        String result2 = sheetCalculate.calculate("N5bbd420f-3ce3-11ea-a676-00163e048143=ROUND(2*K5bbd420f-3ce3-11ea-a676-00163e048143+5,0)");
+        sheetCalculate.integrationResult();
+        System.out.println("-------------------------------------------------");
+        System.out.println(System.currentTimeMillis() - start + "ms");
+        System.out.println(result1);
+        System.out.println(result2);
+    }
+
 //    /**
 //     * 单行计算(数字id)
 //     */
