@@ -1,6 +1,7 @@
 package com.wsbxd.excel.formula.calculation;
 
 import com.wsbxd.excel.formula.calculation.module.book.BookCalculate;
+import com.wsbxd.excel.formula.calculation.module.row.RowCalculate;
 import com.wsbxd.excel.formula.calculation.module.sheet.SheetCalculate;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -106,34 +107,38 @@ class ExcelFormulaCalculationApplicationTests {
         System.out.println(result2);
     }
 
-//    /**
-//     * 单行计算(数字id)
-//     */
-//    @Test
-//    public void rowNum() {
-//        ExcelNumber excel = new ExcelNumber(null, "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, null);
-//        long start = System.currentTimeMillis();
-//        RowCalculate<ExcelNumber> calculateHelper = new RowCalculate<>(excel);
-//        calculateHelper.calculateChangeValue("I=A+ABS(MIN(O+2,B)*2-MAX(A:H))+MAX(K:N)");
-//        calculateHelper.calculateChangeValue("J=ROUND(2*I+5,0)");
-//        calculateHelper.integrationResult();
-//        System.out.println("-------------------------------------------------");
-//        System.out.println(System.currentTimeMillis() - start + "ms");
-//    }
-//
-//    /**
-//     * 单行计算(uuid)
-//     */
-//    @Test
-//    public void rowUUID() {
-//        ExcelUUID excel = new ExcelUUID(null, "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, null);
-//        long start = System.currentTimeMillis();
-//        RowCalculate<ExcelUUID> calculateHelper = new RowCalculate<>(excel);
-//        calculateHelper.calculateChangeValue("I=A+ABS(MIN(O+2,B)*2-MAX(A:H))+MAX(K:N)");
-//        calculateHelper.calculateChangeValue("J=ROUND(2*I+5,0)");
-//        calculateHelper.integrationResult();
-//        System.out.println("-------------------------------------------------");
-//        System.out.println(System.currentTimeMillis() - start + "ms");
-//    }
+    /**
+     * 单行计算(数字id)
+     */
+    @Test
+    public void rowNum() {
+        ExcelNumber excel = new ExcelNumber(null, "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, null);
+        long start = System.currentTimeMillis();
+        RowCalculate<ExcelNumber> calculateHelper = new RowCalculate<>(excel);
+        String result1 = calculateHelper.calculate("I=A+ABS(MIN(O+2,B)*2-MAX(A:H))+MAX(K:N)");
+        String result2 = calculateHelper.calculate("J=ROUND(2*I+5,0)");
+        calculateHelper.integrationResult();
+        System.out.println("-------------------------------------------------");
+        System.out.println(System.currentTimeMillis() - start + "ms");
+        System.out.println(result1);
+        System.out.println(result2);
+    }
+
+    /**
+     * 单行计算(uuid)
+     */
+    @Test
+    public void rowUUID() {
+        ExcelUUID excel = new ExcelUUID(null, "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, null);
+        long start = System.currentTimeMillis();
+        RowCalculate<ExcelUUID> calculateHelper = new RowCalculate<>(excel);
+        String result1 = calculateHelper.calculate("I=A+ABS(MIN(O+2,B)*2-MAX(A:H))+MAX(K:N)");
+        String result2 = calculateHelper.calculate("J=ROUND(2*I+5,0)");
+        calculateHelper.integrationResult();
+        System.out.println("-------------------------------------------------");
+        System.out.println(System.currentTimeMillis() - start + "ms");
+        System.out.println(result1);
+        System.out.println(result2);
+    }
 
 }
