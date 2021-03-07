@@ -88,7 +88,7 @@ public class RowFunctionNode<T> {
                 } else {
                     // Not Colon parameter processing
                     List<String> cellStrList = properties.getCellStrListByFormula(parameter);
-                    Map<String, String> columnAndValue = excelRow.getColumnStrAndValueMap(cellStrList);
+                    Map<String, String> columnAndValue = excelRow.getCellStrAndValueMap(cellStrList);
                     this.add(ExcelUtil.functionCalculate(parameter, columnAndValue));
                 }
             }

@@ -63,7 +63,7 @@ public class RowFormula<T> {
         });
         //解析单元格获取值
         List<String> columnStrList = this.properties.getCellStrListByFormula(this.formula);
-        Map<String, String> cellAndValue = excelRow.getColumnStrAndValueMap(columnStrList);
+        Map<String, String> cellAndValue = excelRow.getCellStrAndValueMap(columnStrList);
         String value = ExcelUtil.arithmeticCalculate(this.formula, cellAndValue);
         //如果有返回单元格则添加至返回单元格
         if (null != this.returnCell) {

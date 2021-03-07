@@ -2,6 +2,7 @@ package com.wsbxd.excel.formula.calculation.module.row.entity;
 
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
+import com.wsbxd.excel.formula.calculation.common.entity.ExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelReflectUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * @author chenhaoxuan
  * @date 2019/8/25
  */
-public class ExcelRow<T> {
+public class ExcelRow<T> implements ExcelEntity {
 
     private ExcelDataProperties properties;
 
@@ -28,6 +29,7 @@ public class ExcelRow<T> {
 
     private T excel;
 
+    @Override
     public void integrationResult() {
         this.columnAndCellListMap.forEach((column, value) -> {
             if (value.getBaseValue() != ExcelReflectUtil.getValue(excel, column)) {
@@ -36,39 +38,25 @@ public class ExcelRow<T> {
         });
     }
 
-    /**
-     * 修改ExcelCell
-     *
-     * @param excelCell ExcelCell
-     */
-    public void updateExcelCellValue(ExcelCell excelCell) {
-        this.columnAndCellListMap.get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
-    }
-
-    /**
-     * 根据列字符串集合集合获取 Map<cellStr, value>
-     *
-     * @param columnStrList 列字符串集合
-     * @return Map<columnStr, value>
-     */
-    public Map<String, String> getColumnStrAndValueMap(List<String> columnStrList) {
-        return new HashMap<String, String>(16) {{
-            columnStrList.forEach(columnStr -> put(columnStr, getExcelCellValue(columnStr)));
-        }};
-    }
-
-    public String getExcelCellValue(String column) {
-        if (columnAndCellListMap.containsKey(column)) {
-            return columnAndCellListMap.get(column).getBaseValue();
+    @Override
+    public String getExcelCellValue(String cell) {
+        if (columnAndCellListMap.containsKey(cell)) {
+            return columnAndCellListMap.get(cell).getBaseValue();
         }
         return null;
     }
 
+    @Override
     public ExcelCell getExcelCell(ExcelCell excelCell) {
         if (columnAndCellListMap.containsKey(excelCell.getColumn())) {
             return columnAndCellListMap.get(excelCell.getColumn());
         }
         return null;
+    }
+
+    @Override
+    public void updateExcelCellValue(ExcelCell excelCell) {
+        this.columnAndCellListMap.get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
     }
 
     public List<String> getExcelCellValueList(ExcelCell startCell, ExcelCell endCell) {

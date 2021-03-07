@@ -3,7 +3,7 @@ package com.wsbxd.excel.formula.calculation.module.book;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
-import com.wsbxd.excel.formula.calculation.common.abstracts.ExcelCalculate;
+import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
 import com.wsbxd.excel.formula.calculation.module.book.formula.BookFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

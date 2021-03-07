@@ -2,6 +2,7 @@ package com.wsbxd.excel.formula.calculation.module.book.entity;
 
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
+import com.wsbxd.excel.formula.calculation.common.entity.ExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelReflectUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2021/2/27 11:11
  */
-public class ExcelBook<T> {
+public class ExcelBook<T> implements ExcelEntity {
 
     private ExcelDataProperties properties;
 
@@ -33,6 +34,7 @@ public class ExcelBook<T> {
 
     private List<T> excelList;
 
+    @Override
     public void integrationResult() {
         Map<String, T> idAndList = this.excelList.stream().collect(Collectors.toMap(e -> ExcelReflectUtil.getValue(e, this.properties.getIdField()), e -> e));
         this.sheetAndSheetDataMap.forEach((sheetName, excelSheet) -> {
@@ -45,27 +47,7 @@ public class ExcelBook<T> {
         });
     }
 
-    /**
-     * 根据单元格字符串集合获取 Map<cellStr, value>
-     *
-     * @param cellStrList 单元格字符串集合
-     * @return Map<cellStr, value>
-     */
-    public Map<String, String> getCellStrAndValueMap(List<String> cellStrList) {
-        return new HashMap<String, String>(16) {{
-            cellStrList.forEach(cellStr -> put(cellStr, getExcelCellValue(cellStr)));
-        }};
-    }
-
-    /**
-     * 修改ExcelCell
-     *
-     * @param excelCell ExcelCell
-     */
-    public void updateExcelCellValue(ExcelCell excelCell) {
-        this.sheetAndSheetDataMap.get(excelCell.getSheet()).get(excelCell.getId()).get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
-    }
-
+    @Override
     public String getExcelCellValue(String cell) {
         ExcelCell excelCell = this.getExcelCell(new ExcelCell(cell, this.properties.getExcelIdTypeEnum()));
         if (null != excelCell) {
@@ -74,6 +56,7 @@ public class ExcelBook<T> {
         return null;
     }
 
+    @Override
     public ExcelCell getExcelCell(ExcelCell excelCell) {
         if (this.sheetAndSheetDataMap.containsKey(excelCell.getSheet())) {
             Map<String, Map<String, ExcelCell>> idAndColumnMap = this.sheetAndSheetDataMap.get(excelCell.getSheet());
@@ -85,6 +68,11 @@ public class ExcelBook<T> {
             }
         }
         return null;
+    }
+
+    @Override
+    public void updateExcelCellValue(ExcelCell excelCell) {
+        this.sheetAndSheetDataMap.get(excelCell.getSheet()).get(excelCell.getId()).get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
     }
 
     public List<String> getExcelCellValueList(ExcelCell startCell, ExcelCell endCell) {

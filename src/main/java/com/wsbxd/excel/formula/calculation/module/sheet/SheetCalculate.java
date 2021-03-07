@@ -1,6 +1,6 @@
 package com.wsbxd.excel.formula.calculation.module.sheet;
 
-import com.wsbxd.excel.formula.calculation.common.abstracts.ExcelCalculate;
+import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.sheet.entity.ExcelSheet;
