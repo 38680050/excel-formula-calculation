@@ -62,7 +62,7 @@ public class BookFunctionNode<T> {
      */
     private List<BookFunctionNode<T>> bookFunctionNodeList = new ArrayList<>();
 
-    public void functionCalculate(BookFunction bookFunction, ExcelBook<T> excelBook, String currentSheet) {
+    public void functionCalculate(BookFunction<T> bookFunction, ExcelBook<T> excelBook, String currentSheet) {
         //递归计算所有公式
         this.bookFunctionNodeList.forEach(bookFunctionNode -> {
             bookFunctionNode.functionCalculate(bookFunction, excelBook, currentSheet);

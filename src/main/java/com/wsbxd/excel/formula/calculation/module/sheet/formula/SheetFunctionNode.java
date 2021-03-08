@@ -61,7 +61,7 @@ public class SheetFunctionNode<T> {
      */
     private List<SheetFunctionNode<T>> sheetFunctionNodeList = new ArrayList<>();
 
-    public void functionCalculate(SheetFunction sheetFunction, ExcelSheet<T> excelSheet) {
+    public void functionCalculate(SheetFunction<T> sheetFunction, ExcelSheet<T> excelSheet) {
         //递归计算所有公式
         this.sheetFunctionNodeList.forEach(sheetFunctionNode -> {
             sheetFunctionNode.functionCalculate(sheetFunction, excelSheet);

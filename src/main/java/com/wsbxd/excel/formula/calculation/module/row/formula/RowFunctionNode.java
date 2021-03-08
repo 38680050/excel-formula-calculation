@@ -61,7 +61,7 @@ public class RowFunctionNode<T> {
      */
     private List<RowFunctionNode<T>> rowFunctionNodeList = new ArrayList<>();
 
-    public void functionCalculate(RowFunction rowFunction, ExcelRow<T> excelRow) {
+    public void functionCalculate(RowFunction<T> rowFunction, ExcelRow<T> excelRow) {
         //递归计算所有公式
         this.rowFunctionNodeList.forEach(rowFunctionNode -> {
             rowFunctionNode.functionCalculate(rowFunction, excelRow);
