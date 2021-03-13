@@ -1,6 +1,6 @@
 package com.wsbxd.excel.formula.calculation.module.book;
 
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
 import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
@@ -29,7 +29,7 @@ public class BookCalculate<T> implements ExcelCalculate {
     /**
      * excel data properties
      */
-    private final ExcelDataProperties properties;
+    private final ExcelEntityProperties properties;
 
     @Override
     public String calculate(String formula) {
@@ -51,7 +51,7 @@ public class BookCalculate<T> implements ExcelCalculate {
     }
 
     public BookCalculate(List<T> excelList, Class<T> tClass) {
-        this.properties = new ExcelDataProperties(ExcelCalculateTypeEnum.BOOK, tClass);
+        this.properties = new ExcelEntityProperties(ExcelCalculateTypeEnum.BOOK, tClass);
         this.excelBook = new ExcelBook<>(excelList, this.properties);
     }
 

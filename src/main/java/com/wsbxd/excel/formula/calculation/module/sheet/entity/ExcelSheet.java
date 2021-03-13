@@ -1,9 +1,9 @@
 package com.wsbxd.excel.formula.calculation.module.sheet.entity;
 
+import com.wsbxd.excel.formula.calculation.common.calculation.entity.ExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
-import com.wsbxd.excel.formula.calculation.common.entity.ExcelEntity;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelReflectUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class ExcelSheet<T> implements ExcelEntity {
 
-    private ExcelDataProperties properties;
+    private ExcelEntityProperties properties;
 
     private Map<String, Integer> idAndSortMap;
 
@@ -107,7 +107,7 @@ public class ExcelSheet<T> implements ExcelEntity {
         return excelCellList;
     }
 
-    public ExcelSheet(List<T> excelList, ExcelDataProperties properties) {
+    public ExcelSheet(List<T> excelList, ExcelEntityProperties properties) {
         this.excelList = excelList;
         this.properties = properties;
         List<Integer> excelSort = excelList.stream().map(e -> (Integer) ExcelReflectUtil.getValue(e, this.properties.getSortField())).collect(Collectors.toList());
@@ -133,11 +133,11 @@ public class ExcelSheet<T> implements ExcelEntity {
                 }));
     }
 
-    public ExcelDataProperties getProperties() {
+    public ExcelEntityProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(ExcelDataProperties properties) {
+    public void setProperties(ExcelEntityProperties properties) {
         this.properties = properties;
     }
 
@@ -165,7 +165,7 @@ public class ExcelSheet<T> implements ExcelEntity {
         this.excelList = excelList;
     }
 
-    public ExcelSheet(ExcelDataProperties properties, Map<String, Integer> idAndSortMap, Map<String, Map<String, ExcelCell>> idAndCellListMap, List<T> excelList) {
+    public ExcelSheet(ExcelEntityProperties properties, Map<String, Integer> idAndSortMap, Map<String, Map<String, ExcelCell>> idAndCellListMap, List<T> excelList) {
         this.properties = properties;
         this.idAndSortMap = idAndSortMap;
         this.idAndCellListMap = idAndCellListMap;

@@ -1,16 +1,15 @@
 package com.wsbxd.excel.formula.calculation.module.row.entity;
 
+import com.wsbxd.excel.formula.calculation.common.calculation.entity.ExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
-import com.wsbxd.excel.formula.calculation.common.entity.ExcelEntity;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelReflectUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class ExcelRow<T> implements ExcelEntity {
 
-    private ExcelDataProperties properties;
+    private ExcelEntityProperties properties;
 
     private Map<String, ExcelCell> columnAndCellListMap;
 
@@ -78,7 +77,7 @@ public class ExcelRow<T> implements ExcelEntity {
         return excelCellList;
     }
 
-    public ExcelRow(T excel, ExcelDataProperties properties) {
+    public ExcelRow(T excel, ExcelEntityProperties properties) {
         this.excel = excel;
         this.properties = properties;
         //列和单元格类型
@@ -88,11 +87,11 @@ public class ExcelRow<T> implements ExcelEntity {
                         ExcelStrUtil.toString(ExcelReflectUtil.getValue(excel, properties.getIdField())), ExcelReflectUtil.getValue(this.excel, column), columnAndType.getOrDefault(column.getName(), ExcelCellTypeEnum.STRING))));
     }
 
-    public ExcelDataProperties getProperties() {
+    public ExcelEntityProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(ExcelDataProperties properties) {
+    public void setProperties(ExcelEntityProperties properties) {
         this.properties = properties;
     }
 
@@ -112,7 +111,7 @@ public class ExcelRow<T> implements ExcelEntity {
         this.excel = excel;
     }
 
-    public ExcelRow(ExcelDataProperties properties, Map<String, ExcelCell> columnAndCellListMap, T excel) {
+    public ExcelRow(ExcelEntityProperties properties, Map<String, ExcelCell> columnAndCellListMap, T excel) {
         this.properties = properties;
         this.columnAndCellListMap = columnAndCellListMap;
         this.excel = excel;

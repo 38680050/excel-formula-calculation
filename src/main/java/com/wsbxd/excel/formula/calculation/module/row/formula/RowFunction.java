@@ -3,7 +3,7 @@ package com.wsbxd.excel.formula.calculation.module.row.formula;
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
 import com.wsbxd.excel.formula.calculation.common.function.Function;
 import com.wsbxd.excel.formula.calculation.common.function.FunctionImpl;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.module.row.entity.ExcelRow;
 
 import java.lang.reflect.Method;
@@ -42,7 +42,7 @@ public class RowFunction<T> {
     /**
      * excel data properties
      */
-    private ExcelDataProperties properties;
+    private ExcelEntityProperties properties;
 
     /**
      * The function node contained in the current node
@@ -155,11 +155,11 @@ public class RowFunction<T> {
         return parenthesisIndexMap;
     }
 
-    public RowFunction(String formula, ExcelDataProperties properties) {
+    public RowFunction(String formula, ExcelEntityProperties properties) {
         this(formula, FunctionImpl.class, properties);
     }
 
-    public RowFunction(String formula, Class<? extends Function> functionImplClass, ExcelDataProperties properties) {
+    public RowFunction(String formula, Class<? extends Function> functionImplClass, ExcelEntityProperties properties) {
         this.properties = properties;
         Map<Integer, Integer> parenthesisIndexMap = getParenthesisIndexMapByFormula(formula);
         Map<Integer, String> indexFunctionNameMap = getIndexFunctionNameMapByFormula(formula);

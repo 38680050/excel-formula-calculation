@@ -1,7 +1,7 @@
 package com.wsbxd.excel.formula.calculation.module.row;
 
 import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.row.entity.ExcelRow;
 import com.wsbxd.excel.formula.calculation.module.row.formula.RowFormula;
@@ -26,7 +26,7 @@ public class RowCalculate<T> implements ExcelCalculate {
     /**
      * excel data properties
      */
-    private final ExcelDataProperties properties;
+    private final ExcelEntityProperties properties;
 
     @Override
     public String calculate(String formula) {
@@ -44,7 +44,7 @@ public class RowCalculate<T> implements ExcelCalculate {
     }
 
     public RowCalculate(T t) {
-        this.properties = new ExcelDataProperties(ExcelCalculateTypeEnum.ROW, t.getClass());
+        this.properties = new ExcelEntityProperties(ExcelCalculateTypeEnum.ROW, t.getClass());
         this.excelRow = new ExcelRow<>(t, this.properties);
     }
 

@@ -2,7 +2,7 @@ package com.wsbxd.excel.formula.calculation.module.book.formula;
 
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
@@ -55,7 +55,7 @@ public class BookFunctionNode<T> {
     /**
      * excel data properties
      */
-    private ExcelDataProperties properties;
+    private ExcelEntityProperties properties;
 
     /**
      * The function node contained in the current node
@@ -148,7 +148,7 @@ public class BookFunctionNode<T> {
         return value != null;
     }
 
-    public BookFunctionNode(String function, String parameters, Integer leftIndex, Integer rightIndex, ExcelDataProperties properties) {
+    public BookFunctionNode(String function, String parameters, Integer leftIndex, Integer rightIndex, ExcelEntityProperties properties) {
         this.function = function;
         this.parameters = parameters;
         this.leftIndex = leftIndex;
@@ -205,11 +205,11 @@ public class BookFunctionNode<T> {
         this.rightIndex = rightIndex;
     }
 
-    public ExcelDataProperties getProperties() {
+    public ExcelEntityProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(ExcelDataProperties properties) {
+    public void setProperties(ExcelEntityProperties properties) {
         this.properties = properties;
     }
 

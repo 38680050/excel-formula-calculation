@@ -1,7 +1,7 @@
 package com.wsbxd.excel.formula.calculation.module.sheet;
 
 import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.sheet.entity.ExcelSheet;
 import com.wsbxd.excel.formula.calculation.module.sheet.formula.SheetFormula;
@@ -28,7 +28,7 @@ public class SheetCalculate<T> implements ExcelCalculate {
     /**
      * excel data properties
      */
-    private final ExcelDataProperties properties;
+    private final ExcelEntityProperties properties;
 
     @Override
     public String calculate(String formula) {
@@ -46,7 +46,7 @@ public class SheetCalculate<T> implements ExcelCalculate {
     }
 
     public SheetCalculate(List<T> excelList, Class<T> tClass) {
-        this.properties = new ExcelDataProperties(ExcelCalculateTypeEnum.SHEET, tClass);
+        this.properties = new ExcelEntityProperties(ExcelCalculateTypeEnum.SHEET, tClass);
         this.excelSheet = new ExcelSheet<>(excelList, properties);
     }
 

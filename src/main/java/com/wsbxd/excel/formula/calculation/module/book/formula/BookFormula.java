@@ -1,7 +1,7 @@
 package com.wsbxd.excel.formula.calculation.module.book.formula;
 
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
 
@@ -33,14 +33,14 @@ public class BookFormula<T> {
     /**
      * excel data properties
      */
-    private ExcelDataProperties properties;
+    private ExcelEntityProperties properties;
 
     /**
      * book Function
      */
     private BookFunction<T> bookFunction;
 
-    public BookFormula(String currentSheet, String formula, ExcelDataProperties properties) {
+    public BookFormula(String currentSheet, String formula, ExcelEntityProperties properties) {
         this.properties = properties;
         //返回单元格
         Matcher matcher = this.properties.getReturnCellPattern().matcher(formula);
@@ -94,11 +94,11 @@ public class BookFormula<T> {
         this.value = value;
     }
 
-    public ExcelDataProperties getProperties() {
+    public ExcelEntityProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(ExcelDataProperties properties) {
+    public void setProperties(ExcelEntityProperties properties) {
         this.properties = properties;
     }
 

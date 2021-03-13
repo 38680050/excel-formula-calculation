@@ -3,7 +3,7 @@ package com.wsbxd.excel.formula.calculation.module.book.formula;
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
 import com.wsbxd.excel.formula.calculation.common.function.Function;
 import com.wsbxd.excel.formula.calculation.common.function.FunctionImpl;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
 
 import java.lang.reflect.Method;
@@ -43,7 +43,7 @@ public class BookFunction<T> {
     /**
      * excel data properties
      */
-    private final ExcelDataProperties properties;
+    private final ExcelEntityProperties properties;
 
     /**
      * The function node contained in the current node
@@ -101,11 +101,11 @@ public class BookFunction<T> {
         }
     }
 
-    public BookFunction(String formula, ExcelDataProperties properties) {
+    public BookFunction(String formula, ExcelEntityProperties properties) {
         this(formula, FunctionImpl.class, properties);
     }
 
-    public BookFunction(String formula, Class<? extends Function> functionImplClass, ExcelDataProperties properties) {
+    public BookFunction(String formula, Class<? extends Function> functionImplClass, ExcelEntityProperties properties) {
         this.properties = properties;
         Map<Integer, Integer> parenthesisIndexMap = getParenthesisIndexMapByFormula(formula);
         Map<Integer, String> indexFunctionNameMap = getIndexFunctionNameMapByFormula(formula);

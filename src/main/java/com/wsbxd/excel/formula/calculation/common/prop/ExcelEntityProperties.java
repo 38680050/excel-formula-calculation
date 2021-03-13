@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @date 2021/2/27 11:11
  */
-public class ExcelDataProperties {
+public class ExcelEntityProperties {
 
     /**
      * 不带页签数字行单元格匹配
@@ -117,7 +117,7 @@ public class ExcelDataProperties {
      * @param sortFieldName       排序字段名称
      * @param columnFieldNameList 列字段名称集合
      */
-    public ExcelDataProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz, String idFieldName, ExcelIdTypeEnum excelIdTypeEnum, String sheetFieldName, String sortFieldName, List<String> columnFieldNameList) {
+    public ExcelEntityProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz, String idFieldName, ExcelIdTypeEnum excelIdTypeEnum, String sheetFieldName, String sortFieldName, List<String> columnFieldNameList) {
         try {
             this.calculateType = calculateType;
             this.idField = clazz.getDeclaredField(idFieldName);
@@ -142,7 +142,7 @@ public class ExcelDataProperties {
      * @param calculateType Excel 计算类型
      * @param clazz         数据类
      */
-    public ExcelDataProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz) {
+    public ExcelEntityProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz) {
         this.calculateType = calculateType;
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
@@ -277,7 +277,7 @@ public class ExcelDataProperties {
         this.calculateType = calculateType;
     }
 
-    public ExcelDataProperties(Field idField, ExcelIdTypeEnum excelIdTypeEnum, Field cellTypesField, Field sheetField, Field sortField, List<Field> columnFieldList, ExcelCalculateTypeEnum calculateType) {
+    public ExcelEntityProperties(Field idField, ExcelIdTypeEnum excelIdTypeEnum, Field cellTypesField, Field sheetField, Field sortField, List<Field> columnFieldList, ExcelCalculateTypeEnum calculateType) {
         this.idField = idField;
         this.excelIdTypeEnum = excelIdTypeEnum;
         this.cellTypesField = cellTypesField;

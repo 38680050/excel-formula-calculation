@@ -2,7 +2,7 @@ package com.wsbxd.excel.formula.calculation.module.row.formula;
 
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelDataProperties;
+import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
 import com.wsbxd.excel.formula.calculation.module.row.entity.ExcelRow;
@@ -54,7 +54,7 @@ public class RowFunctionNode<T> {
     /**
      * excel data properties
      */
-    private ExcelDataProperties properties;
+    private ExcelEntityProperties properties;
 
     /**
      * The function node contained in the current node
@@ -147,7 +147,7 @@ public class RowFunctionNode<T> {
         return value != null;
     }
 
-    public RowFunctionNode(String function, String parameters, Integer leftIndex, Integer rightIndex, ExcelDataProperties properties) {
+    public RowFunctionNode(String function, String parameters, Integer leftIndex, Integer rightIndex, ExcelEntityProperties properties) {
         this.properties = properties;
         this.function = function;
         this.parameters = parameters;
@@ -204,11 +204,11 @@ public class RowFunctionNode<T> {
         this.rightIndex = rightIndex;
     }
 
-    public ExcelDataProperties getProperties() {
+    public ExcelEntityProperties getProperties() {
         return properties;
     }
 
-    public void setProperties(ExcelDataProperties properties) {
+    public void setProperties(ExcelEntityProperties properties) {
         this.properties = properties;
     }
 
