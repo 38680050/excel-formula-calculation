@@ -70,21 +70,23 @@ public class ExcelSheet<T> implements ExcelEntity {
         this.idAndCellListMap.get(excelCell.getId()).get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
     }
 
+    @Override
+    public List<String> getExcelCellValueList(ExcelCell startCell, ExcelCell endCell) {
+        return getExcelCellList(startCell, endCell)
+                .stream().map(ExcelCell::getBaseValue).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ExcelCell> getExcelCellList(ExcelCell startCell, ExcelCell endCell) {
+        return getExcelCellList(startCell.getId(), startCell.getColumn(), endCell.getId(), endCell.getColumn());
+    }
+
     public ExcelCell getExcelCell(String row, String column) {
         return idAndCellListMap.get(row).get(column);
     }
 
     public String getExcelCellStrValue(String row, String column) {
         return idAndCellListMap.get(row).get(column).getBaseValue();
-    }
-
-    public List<String> getExcelCellValueList(ExcelCell startCell, ExcelCell endCell) {
-        return getExcelCellList(startCell, endCell)
-                .stream().map(ExcelCell::getBaseValue).collect(Collectors.toList());
-    }
-
-    public List<ExcelCell> getExcelCellList(ExcelCell startCell, ExcelCell endCell) {
-        return getExcelCellList(startCell.getId(), startCell.getColumn(), endCell.getId(), endCell.getColumn());
     }
 
     public List<ExcelCell> getExcelCellList(String startRow, String startColumn, String endRow, String endColumn) {

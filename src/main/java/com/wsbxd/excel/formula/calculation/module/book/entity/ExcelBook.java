@@ -75,11 +75,13 @@ public class ExcelBook<T> implements ExcelEntity {
         this.sheetAndSheetDataMap.get(excelCell.getSheet()).get(excelCell.getId()).get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
     }
 
+    @Override
     public List<String> getExcelCellValueList(ExcelCell startCell, ExcelCell endCell) {
         return getExcelCellList(startCell, endCell)
                 .stream().map(ExcelCell::getBaseValue).collect(Collectors.toList());
     }
 
+    @Override
     public List<ExcelCell> getExcelCellList(ExcelCell startCell, ExcelCell endCell) {
         //cell1:cell2必须在一个页签中
         if (!startCell.getSheet().equals(endCell.getSheet())) {

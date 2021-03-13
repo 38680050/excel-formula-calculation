@@ -55,4 +55,22 @@ public interface ExcelEntity {
      */
     void updateExcelCellValue(ExcelCell excelCell);
 
+    /**
+     * 根据开始单元格和结束单元格获取这个范围中的所有单元格的基础值
+     *
+     * @param startCell 开始单元格
+     * @param endCell   结束单元格
+     * @return 单元格基础值集合
+     */
+    List<String> getExcelCellValueList(ExcelCell startCell, ExcelCell endCell);
+
+    /**
+     * 根据开始单元格和结束单元格获取这个范围中的所有单元格
+     *
+     * @param startCell 开始单元格
+     * @param endCell   结束单元格
+     * @return 单元格集合
+     */
+    List<ExcelCell> getExcelCellList(ExcelCell startCell, ExcelCell endCell);
+
 }

@@ -59,15 +59,17 @@ public class ExcelRow<T> implements ExcelEntity {
         this.columnAndCellListMap.get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
     }
 
+    @Override
     public List<String> getExcelCellValueList(ExcelCell startCell, ExcelCell endCell) {
-        return getExcelCellList(startCell.getColumn(), endCell.getColumn())
+        return getExcelCellList(startCell, endCell)
                 .stream().map(ExcelCell::getBaseValue).collect(Collectors.toList());
     }
 
-    private List<ExcelCell> getExcelCellList(String startColumn, String endColumn) {
+    @Override
+    public List<ExcelCell> getExcelCellList(ExcelCell startCell, ExcelCell endCell) {
         return new ArrayList<ExcelCell>() {{
             //idAndSortMap中未获取到的话默认获取边界
-            ExcelUtil.getBetweenColumnList(startColumn, endColumn).forEach(column -> {
+            ExcelUtil.getBetweenColumnList(startCell.getColumn(), endCell.getColumn()).forEach(column -> {
                 //没有的列不用管
                 if (columnAndCellListMap.containsKey(column)) {
                     this.add(columnAndCellListMap.get(column));
