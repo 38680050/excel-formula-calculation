@@ -1,6 +1,6 @@
 package com.wsbxd.excel.formula.calculation.module.sheet.entity;
 
-import com.wsbxd.excel.formula.calculation.common.calculation.entity.ExcelEntity;
+import com.wsbxd.excel.formula.calculation.common.calculation.entity.IExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author chenhaoxuan
  * @date 2019/8/25
  */
-public class ExcelSheet<T> implements ExcelEntity {
+public class ExcelSheet<T> implements IExcelEntity {
 
     private ExcelEntityProperties properties;
 
