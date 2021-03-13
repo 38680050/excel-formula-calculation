@@ -3,7 +3,7 @@ package com.wsbxd.excel.formula.calculation.module.book;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
-import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
 import com.wsbxd.excel.formula.calculation.module.book.formula.BookFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.List;
  * @version 1.0
  * @date 2021/2/27 11:11
  */
-public class BookCalculate<T> implements ExcelCalculate {
+public class BookCalculate<T> implements IExcelCalculate {
 
     private final static Logger logger = LoggerFactory.getLogger(BookCalculate.class);
 

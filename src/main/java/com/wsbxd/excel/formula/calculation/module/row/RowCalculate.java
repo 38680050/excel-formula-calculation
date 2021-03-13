@@ -1,6 +1,6 @@
 package com.wsbxd.excel.formula.calculation.module.row;
 
-import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.row.entity.ExcelRow;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * @author chenhaoxuan
  * @date 2019/8/28
  */
-public class RowCalculate<T> implements ExcelCalculate {
+public class RowCalculate<T> implements IExcelCalculate {
 
     private final static Logger logger = LoggerFactory.getLogger(RowCalculate.class);
 

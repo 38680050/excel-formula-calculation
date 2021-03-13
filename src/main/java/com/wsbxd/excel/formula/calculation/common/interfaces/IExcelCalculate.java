@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2021/2/27 11:11
  */
-public interface ExcelCalculate {
+public interface IExcelCalculate {
 
     /**
      * 批量计算

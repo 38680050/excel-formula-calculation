@@ -1,6 +1,6 @@
 package com.wsbxd.excel.formula.calculation.module.sheet;
 
-import com.wsbxd.excel.formula.calculation.common.interfaces.ExcelCalculate;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.sheet.entity.ExcelSheet;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author chenhaoxuan
  * @date 2019/8/28
  */
-public class SheetCalculate<T> implements ExcelCalculate {
+public class SheetCalculate<T> implements IExcelCalculate {
 
     private final static Logger logger = LoggerFactory.getLogger(SheetCalculate.class);
 

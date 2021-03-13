@@ -1,6 +1,6 @@
 package com.wsbxd.excel.formula.calculation.module.book.entity;
 
-import com.wsbxd.excel.formula.calculation.common.calculation.entity.IExcelEntity;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
