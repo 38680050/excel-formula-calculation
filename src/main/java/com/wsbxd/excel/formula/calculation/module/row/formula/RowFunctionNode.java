@@ -77,22 +77,22 @@ public class RowFunctionNode<T> {
     }
 
     private List<String> parseParameters(ExcelRow<T> excelRow) {
-        return new ArrayList<String>() {{
-            for (String parameter : ExcelStrUtil.split(getParameters(), ExcelConstant.DOT_CHAT)) {
-                if (parameter.contains(ExcelConstant.COLON)) {
-                    // Colon parameter processing
-                    String[] cellColon = parameter.split(ExcelConstant.COLON);
-                    ExcelCell startExcelCell = new ExcelCell(cellColon[0], properties.getExcelIdTypeEnum());
-                    ExcelCell endExcelCell = new ExcelCell(cellColon[1], properties.getExcelIdTypeEnum());
-                    this.addAll(excelRow.getExcelCellValueList(startExcelCell, endExcelCell));
-                } else {
-                    // Not Colon parameter processing
-                    List<String> cellStrList = properties.getCellStrListByFormula(parameter);
-                    Map<String, String> columnAndValue = excelRow.getCellStrAndValueMap(cellStrList);
-                    this.add(ExcelUtil.functionCalculate(parameter, columnAndValue));
-                }
+        List<String> resultList = new ArrayList<>();
+        for (String parameter : ExcelStrUtil.split(getParameters(), ExcelConstant.DOT_CHAT)) {
+            if (parameter.contains(ExcelConstant.COLON)) {
+                // Colon parameter processing
+                String[] cellColon = parameter.split(ExcelConstant.COLON);
+                ExcelCell startExcelCell = new ExcelCell(cellColon[0], properties.getExcelIdTypeEnum());
+                ExcelCell endExcelCell = new ExcelCell(cellColon[1], properties.getExcelIdTypeEnum());
+                resultList.addAll(excelRow.getExcelCellValueList(startExcelCell, endExcelCell));
+            } else {
+                // Not Colon parameter processing
+                List<String> cellStrList = properties.getCellStrListByFormula(parameter);
+                Map<String, String> columnAndValue = excelRow.getCellStrAndValueMap(cellStrList);
+                resultList.add(ExcelUtil.functionCalculate(parameter, columnAndValue));
             }
-        }};
+        }
+        return resultList;
     }
 
     /**

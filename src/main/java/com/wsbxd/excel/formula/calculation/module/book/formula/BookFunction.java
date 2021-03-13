@@ -115,11 +115,10 @@ public class BookFunction<T> {
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        this.nameFunctionMap = new HashMap<String, Method>() {{
-            for (Method method : functionImplClass.getDeclaredMethods()) {
-                this.put(method.getName(), method);
-            }
-        }};
+        this.nameFunctionMap = new HashMap<>();
+        for (Method method : functionImplClass.getDeclaredMethods()) {
+            this.nameFunctionMap.put(method.getName(), method);
+        }
     }
 
     /**
@@ -129,12 +128,12 @@ public class BookFunction<T> {
      * @return Map<Index, FunctionName>
      */
     private Map<Integer, String> getIndexFunctionNameMapByFormula(String formula) {
-        return new LinkedHashMap<Integer, String>() {{
-            Matcher functionMatcher = FUNCTION_PATTERN.matcher(formula);
-            while (functionMatcher.find()) {
-                this.put(functionMatcher.end(), functionMatcher.group());
-            }
-        }};
+        Map<Integer, String> indexAndFunctionNameMap = new LinkedHashMap<>();
+        Matcher functionMatcher = FUNCTION_PATTERN.matcher(formula);
+        while (functionMatcher.find()) {
+            indexAndFunctionNameMap.put(functionMatcher.end(), functionMatcher.group());
+        }
+        return indexAndFunctionNameMap;
     }
 
     /**
@@ -149,32 +148,32 @@ public class BookFunction<T> {
         while (parenthesisMatcher.find()) {
             parenthesisMap.put(parenthesisMatcher.end(), parenthesisMatcher.group());
         }
-        return new LinkedHashMap<Integer, Integer>() {{
-            //总数除以2为对应括号数量
-            int parenthesisNum = parenthesisMap.size() / 2;
-            for (int i = 0; i < parenthesisNum; i++) {
-                int count = 0;
-                Integer left = null;
-                Integer right = null;
-                Iterator<Map.Entry<Integer, String>> parenthesisIterator = parenthesisMap.entrySet().iterator();
-                while (parenthesisIterator.hasNext()) {
-                    Map.Entry<Integer, String> parenthesis = parenthesisIterator.next();
-                    if (null == left && ExcelConstant.LEFT_PARENTHESIS.equals(parenthesis.getValue())) {
-                        left = parenthesis.getKey();
-                        parenthesisIterator.remove();
-                    } else if (ExcelConstant.LEFT_PARENTHESIS.equals(parenthesis.getValue())) {
-                        count++;
-                    } else if (0 == count && ExcelConstant.RIGHT_PARENTHESIS.equals(parenthesis.getValue())) {
-                        right = parenthesis.getKey();
-                        parenthesisIterator.remove();
-                        break;
-                    } else {
-                        count--;
-                    }
+        LinkedHashMap<Integer, Integer> parenthesisIndexMap = new LinkedHashMap<>();
+        //总数除以2为对应括号数量
+        int parenthesisNum = parenthesisMap.size() / 2;
+        for (int i = 0; i < parenthesisNum; i++) {
+            int count = 0;
+            Integer left = null;
+            Integer right = null;
+            Iterator<Map.Entry<Integer, String>> parenthesisIterator = parenthesisMap.entrySet().iterator();
+            while (parenthesisIterator.hasNext()) {
+                Map.Entry<Integer, String> parenthesis = parenthesisIterator.next();
+                if (null == left && ExcelConstant.LEFT_PARENTHESIS.equals(parenthesis.getValue())) {
+                    left = parenthesis.getKey();
+                    parenthesisIterator.remove();
+                } else if (ExcelConstant.LEFT_PARENTHESIS.equals(parenthesis.getValue())) {
+                    count++;
+                } else if (0 == count && ExcelConstant.RIGHT_PARENTHESIS.equals(parenthesis.getValue())) {
+                    right = parenthesis.getKey();
+                    parenthesisIterator.remove();
+                    break;
+                } else {
+                    count--;
                 }
-                this.put(left, right);
             }
-        }};
+            parenthesisIndexMap.put(left, right);
+        }
+        return parenthesisIndexMap;
     }
 
     public Function getFunctionImpl() {

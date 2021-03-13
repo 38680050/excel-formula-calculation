@@ -93,21 +93,21 @@ public class ExcelBook<T> implements ExcelEntity {
     private List<ExcelCell> getExcelCellList(String sheet, String startRow, String startColumn, String endRow, String endColumn) {
         Map<String, Map<String, ExcelCell>> idAndCellListMap = sheetAndSheetDataMap.get(sheet);
         Map<String, Integer> idAndSortMap = sheetAndSheetDataSortMap.get(sheet);
-        return new ArrayList<ExcelCell>() {{
-            //idAndSortMap中未获取到的话默认获取边界
-            Integer startRowNum = idAndSortMap.containsKey(startRow) ? idAndSortMap.get(startRow) : minSheetAndSortMap.get(sheet);
-            Integer endRowNum = idAndSortMap.containsKey(endRow) ? idAndSortMap.get(endRow) : maxSheetAndSortMap.get(sheet);
-            List<String> idList = idAndSortMap.entrySet().stream().filter(e -> (e.getValue() >= startRowNum && e.getValue() <= endRowNum))
-                    .map(Map.Entry::getKey).collect(Collectors.toList());
-            idList.forEach(id -> {
-                ExcelUtil.getBetweenColumnList(startColumn, endColumn).forEach(column -> {
-                    //没有的列不用管
-                    if (idAndCellListMap.get(id).containsKey(column)) {
-                        this.add(idAndCellListMap.get(id).get(column));
-                    }
-                });
+        List<ExcelCell> excelCellList = new ArrayList<>();
+        //idAndSortMap中未获取到的话默认获取边界
+        Integer startRowNum = idAndSortMap.containsKey(startRow) ? idAndSortMap.get(startRow) : minSheetAndSortMap.get(sheet);
+        Integer endRowNum = idAndSortMap.containsKey(endRow) ? idAndSortMap.get(endRow) : maxSheetAndSortMap.get(sheet);
+        List<String> idList = idAndSortMap.entrySet().stream().filter(e -> (e.getValue() >= startRowNum && e.getValue() <= endRowNum))
+                .map(Map.Entry::getKey).collect(Collectors.toList());
+        idList.forEach(id -> {
+            ExcelUtil.getBetweenColumnList(startColumn, endColumn).forEach(column -> {
+                //没有的列不用管
+                if (idAndCellListMap.get(id).containsKey(column)) {
+                    excelCellList.add(idAndCellListMap.get(id).get(column));
+                }
             });
-        }};
+        });
+        return excelCellList;
     }
 
     public ExcelBook(List<T> excelList, ExcelDataProperties properties) {
@@ -126,14 +126,16 @@ public class ExcelBook<T> implements ExcelEntity {
                         e1 -> ExcelReflectUtil.getValue(e1, this.properties.getSortField())))));
         this.sheetAndSheetDataMap = nameAndDataListMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
                 e -> e.getValue().stream().collect(Collectors.toMap(e1 -> ExcelStrUtil.toString(ExcelReflectUtil.getValue(e1, this.properties.getIdField())),
-                        e1 -> new HashMap<String, ExcelCell>() {{
+                        e1 -> {
+                            Map<String, ExcelCell> cellStrAndCellMap = new HashMap<>();
                             Map<String, ExcelCellTypeEnum> columnAndType = ExcelUtil.parseColumnAndType(e1, properties);
                             for (Field field : properties.getColumnFieldList()) {
-                                this.put(field.getName(), new ExcelCell(ExcelReflectUtil.getValue(e1, properties.getSheetField()), field.getName(),
+                                cellStrAndCellMap.put(field.getName(), new ExcelCell(ExcelReflectUtil.getValue(e1, properties.getSheetField()), field.getName(),
                                         ExcelStrUtil.toString(ExcelReflectUtil.getValue(e1, properties.getIdField())),
                                         ExcelReflectUtil.getValue(e1, field), columnAndType.getOrDefault(field.getName(), ExcelCellTypeEnum.STRING)));
                             }
-                        }}))));
+                            return cellStrAndCellMap;
+                        }))));
     }
 
     public ExcelDataProperties getProperties() {

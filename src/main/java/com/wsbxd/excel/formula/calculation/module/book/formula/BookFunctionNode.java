@@ -78,22 +78,22 @@ public class BookFunctionNode<T> {
     }
 
     private List<String> parseParameters(ExcelBook<T> excelBook, String currentSheet) {
-        return new ArrayList<String>() {{
-            for (String parameter : ExcelStrUtil.split(getParameters(), ExcelConstant.DOT_CHAT)) {
-                if (parameter.contains(ExcelConstant.COLON)) {
-                    // Colon parameter processing
-                    String[] cellColon = parameter.split(ExcelConstant.COLON);
-                    ExcelCell startExcelCell = new ExcelCell(cellColon[0], properties.getExcelIdTypeEnum(), currentSheet);
-                    ExcelCell endExcelCell = new ExcelCell(cellColon[1], properties.getExcelIdTypeEnum(), currentSheet);
-                    this.addAll(excelBook.getExcelCellValueList(startExcelCell, endExcelCell));
-                } else {
-                    // Not Colon parameter processing
-                    List<String> cellStrList = properties.getCellStrListByFormula(parameter);
-                    Map<String, String> cellAndValue = excelBook.getCellStrAndValueMap(cellStrList);
-                    this.add(ExcelUtil.functionCalculate(parameter, cellAndValue));
-                }
+        List<String> resultList = new ArrayList<>();
+        for (String parameter : ExcelStrUtil.split(getParameters(), ExcelConstant.DOT_CHAT)) {
+            if (parameter.contains(ExcelConstant.COLON)) {
+                // Colon parameter processing
+                String[] cellColon = parameter.split(ExcelConstant.COLON);
+                ExcelCell startExcelCell = new ExcelCell(cellColon[0], properties.getExcelIdTypeEnum(), currentSheet);
+                ExcelCell endExcelCell = new ExcelCell(cellColon[1], properties.getExcelIdTypeEnum(), currentSheet);
+                resultList.addAll(excelBook.getExcelCellValueList(startExcelCell, endExcelCell));
+            } else {
+                // Not Colon parameter processing
+                List<String> cellStrList = properties.getCellStrListByFormula(parameter);
+                Map<String, String> cellAndValue = excelBook.getCellStrAndValueMap(cellStrList);
+                resultList.add(ExcelUtil.functionCalculate(parameter, cellAndValue));
             }
-        }};
+        }
+        return resultList;
     }
 
     /**
