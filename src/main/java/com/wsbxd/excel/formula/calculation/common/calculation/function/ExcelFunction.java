@@ -1,7 +1,7 @@
 package com.wsbxd.excel.formula.calculation.common.calculation.function;
 
 import com.wsbxd.excel.formula.calculation.common.calculation.function.node.ExcelFunctionNode;
-import com.wsbxd.excel.formula.calculation.common.function.Function;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IFunction;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 
 import java.lang.reflect.Method;
@@ -37,7 +37,7 @@ public class ExcelFunction<T> {
     /**
      * 函数实现
      */
-    private Function functionImpl;
+    private IFunction functionImpl;
 
     /**
      * Excel 实体类 数据属性

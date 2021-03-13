@@ -1,4 +1,4 @@
-package com.wsbxd.excel.formula.calculation.common.function;
+package com.wsbxd.excel.formula.calculation.common.interfaces;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * @version 1.0
  * @date 2021/2/27 11:11
  */
-public interface Function {
+public interface IFunction {
 
     /**
      * 根据对指定条件的逻辑判断的真假结果，返回相对应的内容

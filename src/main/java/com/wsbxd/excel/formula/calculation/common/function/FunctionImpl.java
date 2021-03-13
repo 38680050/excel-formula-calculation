@@ -1,6 +1,7 @@
 package com.wsbxd.excel.formula.calculation.common.function;
 
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IFunction;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelMathUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
  * @version 1.0
  * @date 2021/2/27 11:11
  */
-public class FunctionImpl implements Function {
+public class FunctionImpl implements IFunction {
 
     @Override
     public String IF(List<String> valueList) {
