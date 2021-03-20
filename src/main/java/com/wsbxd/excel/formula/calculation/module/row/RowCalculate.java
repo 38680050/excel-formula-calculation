@@ -1,10 +1,10 @@
 package com.wsbxd.excel.formula.calculation.module.row;
 
+import com.wsbxd.excel.formula.calculation.common.calculation.formula.ExcelFormula;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.row.entity.ExcelRow;
-import com.wsbxd.excel.formula.calculation.module.row.formula.RowFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +30,8 @@ public class RowCalculate<T> implements IExcelCalculate {
 
     @Override
     public String calculate(String formula) {
-        RowFormula<T> rowFormula = new RowFormula<T>(formula, this.properties);
-        String value = rowFormula.calculate(this.excelRow);
+        ExcelFormula<T> rowFormula = new ExcelFormula<T>(null, formula, this.properties);
+        String value = rowFormula.calculate(null, this.excelRow);
         if (null != rowFormula.getReturnCell()) {
             this.excelRow.updateExcelCellValue(rowFormula.getReturnCell());
         }
