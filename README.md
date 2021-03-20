@@ -1,5 +1,8 @@
 # excel-formula-calculation-old
 Java 仿 excel 公式计算,目前有单行公式计算,单页签公式计算和多页签公式计算
+
+![MIT开源代码许可证](https://img.shields.io/badge/license-MIT-green)
+
 ## 使用说明
 >下面所有东西都可以在 src/test/java 文件夹中找到,并有[excel公式计算.xlsx](src/test/java/com/wsbxd/excel/formula/calculation/excel公式计算.xlsx)辅助验算
 ### 注解@ExcelField
