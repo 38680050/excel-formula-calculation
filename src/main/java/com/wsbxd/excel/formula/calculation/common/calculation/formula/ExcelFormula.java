@@ -37,26 +37,26 @@ public class ExcelFormula<T> {
     /**
      * Excel 实体类 数据属性
      */
-    private final ExcelEntityProperties excelEntityProperties;
+    private final ExcelEntityProperties properties;
 
     /**
      * Excel 公式
      *
-     * @param currentSheet          当前页签名称，只有工作簿计算时不为空
-     * @param formula               公式
-     * @param excelEntityProperties Excel 实体类 数据属性
+     * @param currentSheet 当前页签名称，只有工作簿计算时不为空
+     * @param formula      公式
+     * @param properties   Excel 实体类 数据属性
      */
-    public ExcelFormula(String currentSheet, String formula, ExcelEntityProperties excelEntityProperties) {
-        this.excelEntityProperties = excelEntityProperties;
+    public ExcelFormula(String currentSheet, String formula, ExcelEntityProperties properties) {
+        this.properties = properties;
         //返回单元格
-        Matcher matcher = this.excelEntityProperties.getReturnCellPattern().matcher(formula);
+        Matcher matcher = this.properties.getReturnCellPattern().matcher(formula);
         if (matcher.find()) {
-            this.returnCell = new ExcelCell(this.excelEntityProperties.getCellStrListByFormula(matcher.group()).get(0), this.excelEntityProperties.getExcelIdTypeEnum(), currentSheet);
+            this.returnCell = new ExcelCell(this.properties.getCellStrListByFormula(matcher.group()).get(0), this.properties.getExcelIdTypeEnum(), currentSheet);
             this.formula = formula.substring(matcher.end());
         } else {
             this.formula = formula;
         }
-        this.excelFunction = new ExcelFunction<>(formula, this.excelEntityProperties);
+        this.excelFunction = new ExcelFunction<>(formula, this.properties);
     }
 
     /**
@@ -73,7 +73,7 @@ public class ExcelFormula<T> {
             this.formula = formula.replace(functionNode.getFunction(), functionNode.getValue());
         });
         //解析单元格获取值
-        List<String> cellStrList = this.excelEntityProperties.getCellStrListByFormula(this.formula);
+        List<String> cellStrList = this.properties.getCellStrListByFormula(this.formula);
         Map<String, String> cellAndValue = excelEntity.getCellStrAndValueMap(cellStrList);
         String value = ExcelUtil.arithmeticCalculate(this.formula, cellAndValue);
         //如果有返回单元格则添加至返回单元格
@@ -95,8 +95,8 @@ public class ExcelFormula<T> {
         return excelFunction;
     }
 
-    public ExcelEntityProperties getExcelEntityProperties() {
-        return excelEntityProperties;
+    public ExcelEntityProperties getProperties() {
+        return properties;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ExcelFormula<T> {
                 "returnCell=" + returnCell +
                 ", formula='" + formula + '\'' +
                 ", excelFunction=" + excelFunction +
-                ", excelEntityProperties=" + excelEntityProperties +
+                ", excelEntityProperties=" + properties +
                 '}';
     }
 
