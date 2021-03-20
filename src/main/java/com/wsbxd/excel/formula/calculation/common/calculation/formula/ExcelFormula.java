@@ -3,6 +3,12 @@ package com.wsbxd.excel.formula.calculation.common.calculation.formula;
 import com.wsbxd.excel.formula.calculation.common.calculation.function.ExcelFunction;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
+import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
+import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
+
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * description: Excel 公式
@@ -24,18 +30,83 @@ public class ExcelFormula<T> {
     private String formula;
 
     /**
-     * 值
+     * Excel 函数
      */
-    private String value;
+    private final ExcelFunction<T> excelFunction;
 
     /**
      * Excel 实体类 数据属性
      */
-    private ExcelEntityProperties properties;
+    private final ExcelEntityProperties excelEntityProperties;
 
     /**
-     * Excel 函数
+     * Excel 公式
+     *
+     * @param currentSheet          当前页签名称，只有工作簿计算时不为空
+     * @param formula               公式
+     * @param excelEntityProperties Excel 实体类 数据属性
      */
-    private ExcelFunction<T> excelFunction;
+    public ExcelFormula(String currentSheet, String formula, ExcelEntityProperties excelEntityProperties) {
+        this.excelEntityProperties = excelEntityProperties;
+        //返回单元格
+        Matcher matcher = this.excelEntityProperties.getReturnCellPattern().matcher(formula);
+        if (matcher.find()) {
+            this.returnCell = new ExcelCell(this.excelEntityProperties.getCellStrListByFormula(matcher.group()).get(0), this.excelEntityProperties.getExcelIdTypeEnum(), currentSheet);
+            this.formula = formula.substring(matcher.end());
+        } else {
+            this.formula = formula;
+        }
+        this.excelFunction = new ExcelFunction<>(formula, this.excelEntityProperties);
+    }
+
+    /**
+     * 公式计算
+     *
+     * @param currentSheet 当前页签名称，只有工作簿计算时不为空
+     * @param excelBook    Excel 工作簿
+     * @return 计算结果
+     */
+    public String calculate(String currentSheet, ExcelBook<T> excelBook) {
+        this.excelFunction.functionCalculate(currentSheet, excelBook);
+        //公式替换为值
+        this.excelFunction.getExcelFunctionNodeList().forEach(functionNode -> {
+            this.formula = formula.replace(functionNode.getFunction(), functionNode.getValue());
+        });
+        //解析单元格获取值
+        List<String> cellStrList = this.excelEntityProperties.getCellStrListByFormula(this.formula);
+        Map<String, String> cellAndValue = excelBook.getCellStrAndValueMap(cellStrList);
+        String value = ExcelUtil.arithmeticCalculate(this.formula, cellAndValue);
+        //如果有返回单元格则添加至返回单元格
+        if (null != this.returnCell) {
+            this.returnCell.setOriginalValue(value);
+        }
+        return value;
+    }
+
+    public ExcelCell getReturnCell() {
+        return returnCell;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public ExcelFunction<T> getExcelFunction() {
+        return excelFunction;
+    }
+
+    public ExcelEntityProperties getExcelEntityProperties() {
+        return excelEntityProperties;
+    }
+
+    @Override
+    public String toString() {
+        return "ExcelFormula{" +
+                "returnCell=" + returnCell +
+                ", formula='" + formula + '\'' +
+                ", excelFunction=" + excelFunction +
+                ", excelEntityProperties=" + excelEntityProperties +
+                '}';
+    }
 
 }

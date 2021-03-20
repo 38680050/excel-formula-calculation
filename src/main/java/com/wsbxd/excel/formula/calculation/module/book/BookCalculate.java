@@ -1,10 +1,10 @@
 package com.wsbxd.excel.formula.calculation.module.book;
 
+import com.wsbxd.excel.formula.calculation.common.calculation.formula.ExcelFormula;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
-import com.wsbxd.excel.formula.calculation.module.book.formula.BookFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class BookCalculate<T> implements IExcelCalculate {
     }
 
     public String calculate(String currentSheet, String formula) {
-        BookFormula<T> bookFormula = new BookFormula<>(currentSheet, formula, this.properties);
+        ExcelFormula<T> bookFormula = new ExcelFormula<>(currentSheet, formula, this.properties);
         String value = bookFormula.calculate(currentSheet, this.excelBook);
         if (null != bookFormula.getReturnCell()) {
             this.excelBook.updateExcelCellValue(bookFormula.getReturnCell());
