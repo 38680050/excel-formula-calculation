@@ -3,6 +3,7 @@ package com.wsbxd.excel.formula.calculation.common.calculation.function;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
 import com.wsbxd.excel.formula.calculation.common.function.FunctionImpl;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IFunction;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
@@ -58,9 +59,9 @@ public class ExcelFunction<T> {
         return this.nameFunctionMap.get(name);
     }
 
-    public void functionCalculate(String currentSheet, ExcelBook<T> excelBook) {
+    public void functionCalculate(String currentSheet, IExcelEntity<T> excelEntity) {
         this.excelFunctionNodeList.forEach(ExcelFunctionNode -> {
-            ExcelFunctionNode.functionCalculate(this, excelBook, currentSheet);
+            ExcelFunctionNode.functionCalculate(this, excelEntity, currentSheet);
         });
     }
 
@@ -237,13 +238,13 @@ public class ExcelFunction<T> {
          */
         private final List<ExcelFunctionNode<T>> excelFunctionNodeList = new ArrayList<>();
 
-        public void functionCalculate(ExcelFunction<T> ExcelFunction, ExcelBook<T> excelBook, String currentSheet) {
+        public void functionCalculate(ExcelFunction<T> ExcelFunction, IExcelEntity<T> excelEntity, String currentSheet) {
             //递归计算所有公式
             this.excelFunctionNodeList.forEach(ExcelFunctionNode -> {
-                ExcelFunctionNode.functionCalculate(ExcelFunction, excelBook, currentSheet);
+                ExcelFunctionNode.functionCalculate(ExcelFunction, excelEntity, currentSheet);
                 parameters = parameters.replace(ExcelFunctionNode.function, ExcelFunctionNode.getValue());
             });
-            List<String> valueList = parseParameters(excelBook, currentSheet);
+            List<String> valueList = parseParameters(excelEntity, currentSheet);
             Method method = ExcelFunction.getMethodByName(this.getFunctionName());
             try {
                 this.setValue((String) method.invoke(ExcelFunction.getFunctionImpl(), valueList));
@@ -252,7 +253,7 @@ public class ExcelFunction<T> {
             }
         }
 
-        private List<String> parseParameters(ExcelBook<T> excelBook, String currentSheet) {
+        private List<String> parseParameters(IExcelEntity<T> excelEntity, String currentSheet) {
             List<String> resultList = new ArrayList<>();
             for (String parameter : ExcelStrUtil.split(getParameters(), ExcelConstant.DOT_CHAT)) {
                 if (parameter.contains(ExcelConstant.COLON)) {
@@ -260,11 +261,11 @@ public class ExcelFunction<T> {
                     String[] cellColon = parameter.split(ExcelConstant.COLON);
                     ExcelCell startExcelCell = new ExcelCell(cellColon[0], properties.getExcelIdTypeEnum(), currentSheet);
                     ExcelCell endExcelCell = new ExcelCell(cellColon[1], properties.getExcelIdTypeEnum(), currentSheet);
-                    resultList.addAll(excelBook.getExcelCellValueList(startExcelCell, endExcelCell));
+                    resultList.addAll(excelEntity.getExcelCellValueList(startExcelCell, endExcelCell));
                 } else {
                     // Not Colon parameter processing
                     List<String> cellStrList = properties.getCellStrListByFormula(parameter);
-                    Map<String, String> cellAndValue = excelBook.getCellStrAndValueMap(cellStrList);
+                    Map<String, String> cellAndValue = excelEntity.getCellStrAndValueMap(cellStrList);
                     resultList.add(ExcelUtil.functionCalculate(parameter, cellAndValue));
                 }
             }

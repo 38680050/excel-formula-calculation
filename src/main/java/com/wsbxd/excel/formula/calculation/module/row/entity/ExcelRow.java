@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author chenhaoxuan
  * @date 2019/8/25
  */
-public class ExcelRow<T> implements IExcelEntity {
+public class ExcelRow<T> implements IExcelEntity<T> {
 
     private ExcelEntityProperties properties;
 

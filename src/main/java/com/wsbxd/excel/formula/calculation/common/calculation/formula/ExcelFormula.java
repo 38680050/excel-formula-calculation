@@ -2,6 +2,7 @@ package com.wsbxd.excel.formula.calculation.common.calculation.formula;
 
 import com.wsbxd.excel.formula.calculation.common.calculation.function.ExcelFunction;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
@@ -63,18 +64,18 @@ public class ExcelFormula<T> {
      * 公式计算
      *
      * @param currentSheet 当前页签名称，只有工作簿计算时不为空
-     * @param excelBook    Excel 工作簿
+     * @param excelEntity  Excel 实体类
      * @return 计算结果
      */
-    public String calculate(String currentSheet, ExcelBook<T> excelBook) {
-        this.excelFunction.functionCalculate(currentSheet, excelBook);
+    public String calculate(String currentSheet, IExcelEntity<T> excelEntity) {
+        this.excelFunction.functionCalculate(currentSheet, excelEntity);
         //公式替换为值
         this.excelFunction.getExcelFunctionNodeList().forEach(functionNode -> {
             this.formula = formula.replace(functionNode.getFunction(), functionNode.getValue());
         });
         //解析单元格获取值
         List<String> cellStrList = this.excelEntityProperties.getCellStrListByFormula(this.formula);
-        Map<String, String> cellAndValue = excelBook.getCellStrAndValueMap(cellStrList);
+        Map<String, String> cellAndValue = excelEntity.getCellStrAndValueMap(cellStrList);
         String value = ExcelUtil.arithmeticCalculate(this.formula, cellAndValue);
         //如果有返回单元格则添加至返回单元格
         if (null != this.returnCell) {

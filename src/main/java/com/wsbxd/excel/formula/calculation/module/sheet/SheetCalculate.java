@@ -1,10 +1,10 @@
 package com.wsbxd.excel.formula.calculation.module.sheet;
 
+import com.wsbxd.excel.formula.calculation.common.calculation.formula.ExcelFormula;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
 import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
 import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.sheet.entity.ExcelSheet;
-import com.wsbxd.excel.formula.calculation.module.sheet.formula.SheetFormula;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +32,8 @@ public class SheetCalculate<T> implements IExcelCalculate {
 
     @Override
     public String calculate(String formula) {
-        SheetFormula<T> sheetFormula = new SheetFormula<>(formula, this.properties);
-        String value = sheetFormula.calculate(this.excelSheet);
+        ExcelFormula<T> sheetFormula = new ExcelFormula<>(null, formula, this.properties);
+        String value = sheetFormula.calculate(null, this.excelSheet);
         if (null != sheetFormula.getReturnCell()) {
             this.excelSheet.updateExcelCellValue(sheetFormula.getReturnCell());
         }

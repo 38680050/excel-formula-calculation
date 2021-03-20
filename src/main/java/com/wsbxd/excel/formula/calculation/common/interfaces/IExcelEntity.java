@@ -13,7 +13,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2021/3/7 16:38
  */
-public interface IExcelEntity {
+public interface IExcelEntity<T> {
 
     /**
      * 收敛结果到原集合
