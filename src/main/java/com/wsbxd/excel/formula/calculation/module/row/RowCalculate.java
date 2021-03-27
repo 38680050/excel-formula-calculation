@@ -2,8 +2,8 @@ package com.wsbxd.excel.formula.calculation.module.row;
 
 import com.wsbxd.excel.formula.calculation.common.calculation.formula.ExcelFormula;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
-import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
+import com.wsbxd.excel.formula.calculation.common.config.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.row.entity.ExcelRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +26,11 @@ public class RowCalculate<T> implements IExcelCalculate {
     /**
      * excel data properties
      */
-    private final ExcelEntityProperties properties;
+    private final ExcelCalculateConfig excelCalculateConfig;
 
     @Override
     public String calculate(String formula) {
-        ExcelFormula<T> rowFormula = new ExcelFormula<T>(null, formula, this.properties);
+        ExcelFormula<T> rowFormula = new ExcelFormula<T>(null, formula, this.excelCalculateConfig);
         String value = rowFormula.calculate(null, this.excelRow);
         if (null != rowFormula.getReturnCell()) {
             this.excelRow.updateExcelCellValue(rowFormula.getReturnCell());
@@ -43,9 +43,10 @@ public class RowCalculate<T> implements IExcelCalculate {
         this.excelRow.integrationResult();
     }
 
-    public RowCalculate(T t) {
-        this.properties = new ExcelEntityProperties(ExcelCalculateTypeEnum.ROW, t.getClass());
-        this.excelRow = new ExcelRow<>(t, this.properties);
+    public RowCalculate(T t, ExcelCalculateConfig excelCalculateConfig) {
+        this.excelCalculateConfig = excelCalculateConfig;
+        this.excelCalculateConfig.setCalculateType(ExcelCalculateTypeEnum.ROW);
+        this.excelRow = new ExcelRow<>(t, this.excelCalculateConfig);
     }
 
 }

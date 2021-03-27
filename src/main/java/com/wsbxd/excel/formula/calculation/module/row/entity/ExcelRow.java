@@ -3,7 +3,7 @@ package com.wsbxd.excel.formula.calculation.module.row.entity;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelReflectUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class ExcelRow<T> implements IExcelEntity<T> {
 
-    private ExcelEntityProperties properties;
+    private ExcelCalculateConfig properties;
 
     private Map<String, ExcelCell> columnAndCellListMap;
 
@@ -77,7 +77,7 @@ public class ExcelRow<T> implements IExcelEntity<T> {
         return excelCellList;
     }
 
-    public ExcelRow(T excel, ExcelEntityProperties properties) {
+    public ExcelRow(T excel, ExcelCalculateConfig properties) {
         this.excel = excel;
         this.properties = properties;
         //列和单元格类型
@@ -87,11 +87,11 @@ public class ExcelRow<T> implements IExcelEntity<T> {
                         ExcelStrUtil.toString(ExcelReflectUtil.getValue(excel, properties.getIdField())), ExcelReflectUtil.getValue(this.excel, column), columnAndType.getOrDefault(column.getName(), ExcelCellTypeEnum.STRING))));
     }
 
-    public ExcelEntityProperties getProperties() {
+    public ExcelCalculateConfig getProperties() {
         return properties;
     }
 
-    public void setProperties(ExcelEntityProperties properties) {
+    public void setProperties(ExcelCalculateConfig properties) {
         this.properties = properties;
     }
 
@@ -111,7 +111,7 @@ public class ExcelRow<T> implements IExcelEntity<T> {
         this.excel = excel;
     }
 
-    public ExcelRow(ExcelEntityProperties properties, Map<String, ExcelCell> columnAndCellListMap, T excel) {
+    public ExcelRow(ExcelCalculateConfig properties, Map<String, ExcelCell> columnAndCellListMap, T excel) {
         this.properties = properties;
         this.columnAndCellListMap = columnAndCellListMap;
         this.excel = excel;

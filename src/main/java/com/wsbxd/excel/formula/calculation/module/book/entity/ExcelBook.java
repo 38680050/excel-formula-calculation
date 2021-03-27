@@ -3,7 +3,7 @@ package com.wsbxd.excel.formula.calculation.module.book.entity;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelReflectUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class ExcelBook<T> implements IExcelEntity<T> {
 
-    private ExcelEntityProperties properties;
+    private ExcelCalculateConfig properties;
 
     private Map<String, Map<String, Map<String, ExcelCell>>> sheetAndSheetDataMap;
 
@@ -110,7 +110,7 @@ public class ExcelBook<T> implements IExcelEntity<T> {
         return excelCellList;
     }
 
-    public ExcelBook(List<T> excelList, ExcelEntityProperties properties) {
+    public ExcelBook(List<T> excelList, ExcelCalculateConfig properties) {
         this.excelList = excelList;
         this.properties = properties;
         Map<String, List<T>> nameAndDataListMap = ExcelObjectUtil.classifiedByField(this.excelList, this.properties.getSheetField());
@@ -138,11 +138,11 @@ public class ExcelBook<T> implements IExcelEntity<T> {
                         }))));
     }
 
-    public ExcelEntityProperties getProperties() {
+    public ExcelCalculateConfig getProperties() {
         return properties;
     }
 
-    public void setProperties(ExcelEntityProperties properties) {
+    public void setProperties(ExcelCalculateConfig properties) {
         this.properties = properties;
     }
 

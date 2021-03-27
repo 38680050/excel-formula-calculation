@@ -1,5 +1,6 @@
 package com.wsbxd.excel.formula.calculation;
 
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
 import com.wsbxd.excel.formula.calculation.module.book.BookCalculate;
 import com.wsbxd.excel.formula.calculation.module.row.RowCalculate;
 import com.wsbxd.excel.formula.calculation.module.sheet.SheetCalculate;
@@ -20,6 +21,16 @@ import java.util.List;
 class ExcelFormulaCalculationApplicationTests {
 
     /**
+     * 唯一标识为数字类型的计算配置
+     */
+    private final static ExcelCalculateConfig numberExcelCalculateConfig = new ExcelCalculateConfig(ExcelNumber.class);
+
+    /**
+     * 唯一标识为UUID类型的计算配置
+     */
+    private final static ExcelCalculateConfig uuidExcelCalculateConfig = new ExcelCalculateConfig(ExcelUUID.class);
+
+    /**
      * 多页签计算(数字id)
      */
     @Test
@@ -32,7 +43,7 @@ class ExcelFormulaCalculationApplicationTests {
         excelList.add(new ExcelNumber("5", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, "1900-01-01", null, "777", null, "A-5;B-3;F-5;I-5;K-4", "银行存款", 2));
         System.out.println("-------------------------------------------------");
         long start = System.currentTimeMillis();
-        BookCalculate<ExcelNumber> bookCalculate = new BookCalculate<>(excelList, ExcelNumber.class);
+        BookCalculate<ExcelNumber> bookCalculate = new BookCalculate<>(excelList, numberExcelCalculateConfig);
         String result = bookCalculate.calculate("交易性-股票", "N3=现金!A1*银行存款!C1+ABS(MIN(O2+2,银行存款!B3:银行存款!E5)*2-MAX('交易性-股票'!A1:'交易性-股票'!D3))+MAX(现金!A2:现金!O3)");
         bookCalculate.integrationResult();
         System.out.println(System.currentTimeMillis() - start + "ms");
@@ -52,7 +63,7 @@ class ExcelFormulaCalculationApplicationTests {
         excelList.add(new ExcelUUID("5bbd420f-3ce3-11ea-a676-00163e048143", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, "1900-01-01", null, "777", null, "A-5;B-3;F-5;I-5;K-4", "银行存款", 2));
         System.out.println("-------------------------------------------------");
         long start = System.currentTimeMillis();
-        BookCalculate<ExcelUUID> bookCalculate = new BookCalculate<>(excelList, ExcelUUID.class);
+        BookCalculate<ExcelUUID> bookCalculate = new BookCalculate<>(excelList, uuidExcelCalculateConfig);
         String result = bookCalculate.calculate("交易性-股票", "N3bbd420f-3ce3-11ea-a676-00163e048143=现金!A1bbd420f-3ce3-11ea-a676-00163e048143*银行存款!C1bbd420f-3ce3-11ea-a676-00163e048143+ABS(MIN(O2bbd420f-3ce3-11ea-a676-00163e048143+2,银行存款!B3bbd420f-3ce3-11ea-a676-00163e048143:银行存款!E5bbd420f-3ce3-11ea-a676-00163e048143)*2-MAX('交易性-股票'!A1bbd420f-3ce3-11ea-a676-00163e048143:'交易性-股票'!D3bbd420f-3ce3-11ea-a676-00163e048143))+MAX(现金!A2bbd420f-3ce3-11ea-a676-00163e048143:现金!O3bbd420f-3ce3-11ea-a676-00163e048143)");
         bookCalculate.integrationResult();
         System.out.println(System.currentTimeMillis() - start + "ms");
@@ -72,7 +83,7 @@ class ExcelFormulaCalculationApplicationTests {
         excelList.add(new ExcelNumber("5", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, null, null, "777", null, "A-5;B-3;F-5;I-5;K-4;N-3", null, 5));
         System.out.println("-------------------------------------------------");
         long start = System.currentTimeMillis();
-        SheetCalculate<ExcelNumber> sheetCalculate = new SheetCalculate<>(excelList, ExcelNumber.class);
+        SheetCalculate<ExcelNumber> sheetCalculate = new SheetCalculate<>(excelList, numberExcelCalculateConfig);
         String result1 = sheetCalculate.calculate("K5=A1+ABS(MIN(C5+2,A1:I5)*2-MAX(L1:N5))+MAX(A2:J2)");
         String result2 = sheetCalculate.calculate("N5=ROUND(2*K5+5,0)");
         sheetCalculate.integrationResult();
@@ -94,7 +105,7 @@ class ExcelFormulaCalculationApplicationTests {
         excelList.add(new ExcelUUID("5bbd420f-3ce3-11ea-a676-00163e048143", "2000/01/05", "5%", null, "741", null, "2000/02/05", null, null, "2200/11/05", null, null, null, "777", null, "A-5;B-3;F-5;I-5;K-4;N-3", null, 5));
         System.out.println("-------------------------------------------------");
         long start = System.currentTimeMillis();
-        SheetCalculate<ExcelUUID> sheetCalculate = new SheetCalculate<>(excelList, ExcelUUID.class);
+        SheetCalculate<ExcelUUID> sheetCalculate = new SheetCalculate<>(excelList, uuidExcelCalculateConfig);
         String result1 = sheetCalculate.calculate("K5bbd420f-3ce3-11ea-a676-00163e048143=A1bbd420f-3ce3-11ea-a676-00163e048143+ABS(MIN(C5bbd420f-3ce3-11ea-a676-00163e048143+2,A1bbd420f-3ce3-11ea-a676-00163e048143:I5bbd420f-3ce3-11ea-a676-00163e048143)*2-MAX(L1bbd420f-3ce3-11ea-a676-00163e048143:N5bbd420f-3ce3-11ea-a676-00163e048143))+MAX(A2bbd420f-3ce3-11ea-a676-00163e048143:J2bbd420f-3ce3-11ea-a676-00163e048143)");
         String result2 = sheetCalculate.calculate("N5bbd420f-3ce3-11ea-a676-00163e048143=ROUND(2*K5bbd420f-3ce3-11ea-a676-00163e048143+5,0)");
         sheetCalculate.integrationResult();
@@ -110,7 +121,7 @@ class ExcelFormulaCalculationApplicationTests {
     public void rowNum() {
         ExcelNumber excel = new ExcelNumber(null, "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, null);
         long start = System.currentTimeMillis();
-        RowCalculate<ExcelNumber> calculateHelper = new RowCalculate<>(excel);
+        RowCalculate<ExcelNumber> calculateHelper = new RowCalculate<>(excel, numberExcelCalculateConfig);
         String result1 = calculateHelper.calculate("I=A+ABS(MIN(O+2,B)*2-MAX(A:H))+MAX(K:N)");
         String result2 = calculateHelper.calculate("J=ROUND(2*I+5,0)");
         calculateHelper.integrationResult();
@@ -127,7 +138,7 @@ class ExcelFormulaCalculationApplicationTests {
     public void rowUUID() {
         ExcelUUID excel = new ExcelUUID(null, "200", null, "100000000%", "210", "3.14", "2019/11/15", "5", "44", null, null, "47", "99", "0.05", "0.2", "C-3;F-5", null, null);
         long start = System.currentTimeMillis();
-        RowCalculate<ExcelUUID> calculateHelper = new RowCalculate<>(excel);
+        RowCalculate<ExcelUUID> calculateHelper = new RowCalculate<>(excel, uuidExcelCalculateConfig);
         String result1 = calculateHelper.calculate("I=A+ABS(MIN(O+2,B)*2-MAX(A:H))+MAX(K:N)");
         String result2 = calculateHelper.calculate("J=ROUND(2*I+5,0)");
         calculateHelper.integrationResult();

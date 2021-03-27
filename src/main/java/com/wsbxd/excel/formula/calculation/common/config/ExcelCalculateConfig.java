@@ -1,25 +1,32 @@
-package com.wsbxd.excel.formula.calculation.common.prop;
+package com.wsbxd.excel.formula.calculation.common.config;
 
+import com.wsbxd.excel.formula.calculation.common.exception.ExcelException;
 import com.wsbxd.excel.formula.calculation.common.field.annotation.ExcelField;
 import com.wsbxd.excel.formula.calculation.common.field.enums.ExcelFieldTypeEnum;
 import com.wsbxd.excel.formula.calculation.common.field.enums.ExcelIdTypeEnum;
-import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
+import com.wsbxd.excel.formula.calculation.common.config.enums.ExcelCalculateTypeEnum;
+import com.wsbxd.excel.formula.calculation.common.function.DefaultFunctionImpl;
+import com.wsbxd.excel.formula.calculation.common.interfaces.IFunction;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * description: Excel 实体类 数据属性
+ * description: Excel 计算配置
  *
  * @author chenhaoxuan
  * @version 1.0
  * @date 2021/2/27 11:11
  */
-public class ExcelEntityProperties {
+public class ExcelCalculateConfig {
 
     /**
      * 不带页签数字行单元格匹配
@@ -108,6 +115,50 @@ public class ExcelEntityProperties {
     private ExcelCalculateTypeEnum calculateType;
 
     /**
+     * 函数实现
+     */
+    private IFunction functionImpl;
+
+    /**
+     * 函数和函数名称 Map
+     */
+    private Map<String, Method> nameFunctionMap;
+
+    /**
+     * 函数调用
+     *
+     * @param functionName 函数名称
+     * @param valueList    函数参数
+     * @return 计算结果
+     */
+    public String functionCalculate(String functionName, List<String> valueList) {
+        Method method = nameFunctionMap.get(functionName);
+        try {
+            return (String) method.invoke(this.functionImpl, valueList);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        throw new ExcelException("函数调用失败");
+    }
+
+    /**
+     * 处理方法实现类
+     *
+     * @param functionImplClass 方法实现类
+     */
+    private void handleFunctionImpl(Class<? extends IFunction> functionImplClass) {
+        try {
+            this.functionImpl = functionImplClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        this.nameFunctionMap = new HashMap<>();
+        for (Method method : functionImplClass.getDeclaredMethods()) {
+            this.nameFunctionMap.put(method.getName(), method);
+        }
+    }
+
+    /**
      * 不用注解创建 Excel 实体类 数据属性
      *
      * @param clazz               excel
@@ -117,9 +168,23 @@ public class ExcelEntityProperties {
      * @param sortFieldName       排序字段名称
      * @param columnFieldNameList 列字段名称集合
      */
-    public ExcelEntityProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz, String idFieldName, ExcelIdTypeEnum excelIdTypeEnum, String sheetFieldName, String sortFieldName, List<String> columnFieldNameList) {
+    public ExcelCalculateConfig(Class<?> clazz, String idFieldName, ExcelIdTypeEnum excelIdTypeEnum, String sheetFieldName, String sortFieldName, List<String> columnFieldNameList) {
+        this(clazz, idFieldName, excelIdTypeEnum, sheetFieldName, sortFieldName, columnFieldNameList, DefaultFunctionImpl.class);
+    }
+
+    /**
+     * 不用注解创建 Excel 实体类 数据属性
+     *
+     * @param clazz               excel
+     * @param idFieldName         id字段名称
+     * @param excelIdTypeEnum     id类型
+     * @param sheetFieldName      工作表字段名称
+     * @param sortFieldName       排序字段名称
+     * @param columnFieldNameList 列字段名称集合
+     * @param functionImplClass   函数实现类
+     */
+    public ExcelCalculateConfig(Class<?> clazz, String idFieldName, ExcelIdTypeEnum excelIdTypeEnum, String sheetFieldName, String sortFieldName, List<String> columnFieldNameList, Class<? extends IFunction> functionImplClass) {
         try {
-            this.calculateType = calculateType;
             this.idField = clazz.getDeclaredField(idFieldName);
             this.excelIdTypeEnum = excelIdTypeEnum;
             this.sortField = clazz.getDeclaredField(sortFieldName);
@@ -134,16 +199,25 @@ public class ExcelEntityProperties {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+        handleFunctionImpl(functionImplClass);
     }
 
     /**
      * 用注释创建 Excel 实体类 数据属性
      *
-     * @param calculateType Excel 计算类型
-     * @param clazz         数据类
+     * @param clazz 数据类
      */
-    public ExcelEntityProperties(ExcelCalculateTypeEnum calculateType, Class<?> clazz) {
-        this.calculateType = calculateType;
+    public ExcelCalculateConfig(Class<?> clazz) {
+        this(clazz, DefaultFunctionImpl.class);
+    }
+
+    /**
+     * 用注释创建 Excel 实体类 数据属性
+     *
+     * @param clazz             数据类
+     * @param functionImplClass 函数实现类
+     */
+    public ExcelCalculateConfig(Class<?> clazz, Class<? extends IFunction> functionImplClass) {
         for (Field field : clazz.getDeclaredFields()) {
             field.setAccessible(true);
             ExcelField excelField = field.getAnnotation(ExcelField.class);
@@ -165,6 +239,7 @@ public class ExcelEntityProperties {
                 }
             }
         }
+        handleFunctionImpl(functionImplClass);
     }
 
     /**
@@ -173,6 +248,9 @@ public class ExcelEntityProperties {
      * @return 单元格匹配 Pattern
      */
     public Pattern getReturnCellPattern() {
+        if (null == this.calculateType) {
+            throw new ExcelException("请设置 Excel 计算类型");
+        }
         if (ExcelCalculateTypeEnum.BOOK.equals(this.calculateType)) {
             if (ExcelIdTypeEnum.NUMBER.equals(excelIdTypeEnum)) {
                 return RETURN_SHEET_CELL_NUMBER_PATTERN;
@@ -198,6 +276,9 @@ public class ExcelEntityProperties {
      * @return 单元格字符串集合
      */
     public List<String> getCellStrListByFormula(String formula) {
+        if (null == this.calculateType) {
+            throw new ExcelException("请设置 Excel 计算类型");
+        }
         List<String> cellStrList = new ArrayList<>();
         Matcher matcher = null;
         if (ExcelCalculateTypeEnum.BOOK.equals(this.calculateType)) {
@@ -277,7 +358,23 @@ public class ExcelEntityProperties {
         this.calculateType = calculateType;
     }
 
-    public ExcelEntityProperties(Field idField, ExcelIdTypeEnum excelIdTypeEnum, Field cellTypesField, Field sheetField, Field sortField, List<Field> columnFieldList, ExcelCalculateTypeEnum calculateType) {
+    public Map<String, Method> getNameFunctionMap() {
+        return nameFunctionMap;
+    }
+
+    public void setNameFunctionMap(Map<String, Method> nameFunctionMap) {
+        this.nameFunctionMap = nameFunctionMap;
+    }
+
+    public IFunction getFunctionImpl() {
+        return functionImpl;
+    }
+
+    public void setFunctionImpl(IFunction functionImpl) {
+        this.functionImpl = functionImpl;
+    }
+
+    public ExcelCalculateConfig(Field idField, ExcelIdTypeEnum excelIdTypeEnum, Field cellTypesField, Field sheetField, Field sortField, List<Field> columnFieldList, ExcelCalculateTypeEnum calculateType, IFunction functionImpl) {
         this.idField = idField;
         this.excelIdTypeEnum = excelIdTypeEnum;
         this.cellTypesField = cellTypesField;
@@ -285,6 +382,7 @@ public class ExcelEntityProperties {
         this.sortField = sortField;
         this.columnFieldList = columnFieldList;
         this.calculateType = calculateType;
+        this.functionImpl = functionImpl;
     }
 
     @Override

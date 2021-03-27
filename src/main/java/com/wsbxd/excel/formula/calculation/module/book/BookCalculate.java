@@ -1,8 +1,8 @@
 package com.wsbxd.excel.formula.calculation.module.book;
 
 import com.wsbxd.excel.formula.calculation.common.calculation.formula.ExcelFormula;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
-import com.wsbxd.excel.formula.calculation.common.prop.enums.ExcelCalculateTypeEnum;
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
+import com.wsbxd.excel.formula.calculation.common.config.enums.ExcelCalculateTypeEnum;
 import com.wsbxd.excel.formula.calculation.module.book.entity.ExcelBook;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelCalculate;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class BookCalculate<T> implements IExcelCalculate {
     /**
      * excel data properties
      */
-    private final ExcelEntityProperties properties;
+    private final ExcelCalculateConfig excelCalculateConfig;
 
     @Override
     public String calculate(String formula) {
@@ -37,7 +37,7 @@ public class BookCalculate<T> implements IExcelCalculate {
     }
 
     public String calculate(String currentSheet, String formula) {
-        ExcelFormula<T> bookFormula = new ExcelFormula<>(currentSheet, formula, this.properties);
+        ExcelFormula<T> bookFormula = new ExcelFormula<>(currentSheet, formula, this.excelCalculateConfig);
         String value = bookFormula.calculate(currentSheet, this.excelBook);
         if (null != bookFormula.getReturnCell()) {
             this.excelBook.updateExcelCellValue(bookFormula.getReturnCell());
@@ -50,9 +50,10 @@ public class BookCalculate<T> implements IExcelCalculate {
         this.excelBook.integrationResult();
     }
 
-    public BookCalculate(List<T> excelList, Class<T> tClass) {
-        this.properties = new ExcelEntityProperties(ExcelCalculateTypeEnum.BOOK, tClass);
-        this.excelBook = new ExcelBook<>(excelList, this.properties);
+    public BookCalculate(List<T> excelList, ExcelCalculateConfig excelCalculateConfig) {
+        this.excelCalculateConfig = excelCalculateConfig;
+        this.excelCalculateConfig.setCalculateType(ExcelCalculateTypeEnum.BOOK);
+        this.excelBook = new ExcelBook<>(excelList, this.excelCalculateConfig);
     }
 
 }

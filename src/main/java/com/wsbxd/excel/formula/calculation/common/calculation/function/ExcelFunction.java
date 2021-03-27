@@ -2,10 +2,10 @@ package com.wsbxd.excel.formula.calculation.common.calculation.function;
 
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
-import com.wsbxd.excel.formula.calculation.common.function.FunctionImpl;
+import com.wsbxd.excel.formula.calculation.common.function.DefaultFunctionImpl;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelEntity;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IFunction;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelStrUtil;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
 
@@ -35,33 +35,17 @@ public class ExcelFunction<T> {
     private final static Pattern PARENTHESIS_PATTERN = Pattern.compile("[(|)]");
 
     /**
-     * 函数和函数名称 Map
-     */
-    public Map<String, Method> nameFunctionMap;
-
-    /**
-     * 函数实现
-     */
-    private IFunction functionImpl;
-
-    /**
      * Excel 实体类 数据属性
      */
-    private final ExcelEntityProperties properties;
+    private final ExcelCalculateConfig excelCalculateConfig;
 
     /**
      * 当前函数中包含的函数节点
      */
     private final List<ExcelFunctionNode<T>> excelFunctionNodeList = new ArrayList<>();
 
-    public Method getMethodByName(String name) {
-        return this.nameFunctionMap.get(name);
-    }
-
     public void functionCalculate(String currentSheet, IExcelEntity<T> excelEntity) {
-        this.excelFunctionNodeList.forEach(ExcelFunctionNode -> {
-            ExcelFunctionNode.functionCalculate(this, excelEntity, currentSheet);
-        });
+        this.excelFunctionNodeList.forEach(ExcelFunctionNode -> ExcelFunctionNode.functionCalculate(excelEntity, currentSheet));
     }
 
     /**
@@ -77,7 +61,7 @@ public class ExcelFunction<T> {
                 if (parenthesisIndex.getKey().equals(indexFunctionName.getKey())) {
                     String function = formula.substring(indexFunctionName.getKey() - indexFunctionName.getValue().length(), parenthesisIndex.getValue());
                     String parameters = formula.substring(indexFunctionName.getKey(), parenthesisIndex.getValue() - 1);
-                    addToFunctionNodeList(new ExcelFunctionNode<>(function, parameters, parenthesisIndex.getKey(), parenthesisIndex.getValue(), this.properties));
+                    addToFunctionNodeList(new ExcelFunctionNode<>(function, parameters, parenthesisIndex.getKey(), parenthesisIndex.getValue(), this.excelCalculateConfig));
                 }
             }
         }
@@ -105,24 +89,15 @@ public class ExcelFunction<T> {
         }
     }
 
-    public ExcelFunction(String formula, ExcelEntityProperties properties) {
-        this(formula, FunctionImpl.class, properties);
+    public ExcelFunction(String formula, ExcelCalculateConfig excelCalculateConfig) {
+        this(formula, DefaultFunctionImpl.class, excelCalculateConfig);
     }
 
-    public ExcelFunction(String formula, Class<? extends IFunction> functionImplClass, ExcelEntityProperties properties) {
-        this.properties = properties;
+    public ExcelFunction(String formula, Class<? extends IFunction> functionImplClass, ExcelCalculateConfig excelCalculateConfig) {
+        this.excelCalculateConfig = excelCalculateConfig;
         Map<Integer, Integer> parenthesisIndexMap = getParenthesisIndexMapByFormula(formula);
         Map<Integer, String> indexFunctionNameMap = getIndexFunctionNameMapByFormula(formula);
         setFunctionNodeList(formula, parenthesisIndexMap, indexFunctionNameMap);
-        try {
-            this.functionImpl = functionImplClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        this.nameFunctionMap = new HashMap<>();
-        for (Method method : functionImplClass.getDeclaredMethods()) {
-            this.nameFunctionMap.put(method.getName(), method);
-        }
     }
 
     /**
@@ -180,10 +155,6 @@ public class ExcelFunction<T> {
         return parenthesisIndexMap;
     }
 
-    public IFunction getFunctionImpl() {
-        return functionImpl;
-    }
-
     public List<ExcelFunctionNode<T>> getExcelFunctionNodeList() {
         return excelFunctionNodeList;
     }
@@ -230,26 +201,21 @@ public class ExcelFunction<T> {
         /**
          * Excel 实体类 数据属性
          */
-        private ExcelEntityProperties properties;
+        private ExcelCalculateConfig excelCalculateConfig;
 
         /**
          * 当前节点中包含的函数节点
          */
         private final List<ExcelFunctionNode<T>> excelFunctionNodeList = new ArrayList<>();
 
-        public void functionCalculate(ExcelFunction<T> ExcelFunction, IExcelEntity<T> excelEntity, String currentSheet) {
+        public void functionCalculate(IExcelEntity<T> excelEntity, String currentSheet) {
             //递归计算所有公式
             this.excelFunctionNodeList.forEach(ExcelFunctionNode -> {
-                ExcelFunctionNode.functionCalculate(ExcelFunction, excelEntity, currentSheet);
+                ExcelFunctionNode.functionCalculate(excelEntity, currentSheet);
                 parameters = parameters.replace(ExcelFunctionNode.function, ExcelFunctionNode.getValue());
             });
             List<String> valueList = parseParameters(excelEntity, currentSheet);
-            Method method = ExcelFunction.getMethodByName(this.getFunctionName());
-            try {
-                this.setValue((String) method.invoke(ExcelFunction.getFunctionImpl(), valueList));
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            this.setValue(excelCalculateConfig.functionCalculate(this.functionName, valueList));
         }
 
         private List<String> parseParameters(IExcelEntity<T> excelEntity, String currentSheet) {
@@ -258,12 +224,12 @@ public class ExcelFunction<T> {
                 if (parameter.contains(ExcelConstant.COLON)) {
                     // Colon parameter processing
                     String[] cellColon = parameter.split(ExcelConstant.COLON);
-                    ExcelCell startExcelCell = new ExcelCell(cellColon[0], properties.getExcelIdTypeEnum(), currentSheet);
-                    ExcelCell endExcelCell = new ExcelCell(cellColon[1], properties.getExcelIdTypeEnum(), currentSheet);
+                    ExcelCell startExcelCell = new ExcelCell(cellColon[0], excelCalculateConfig.getExcelIdTypeEnum(), currentSheet);
+                    ExcelCell endExcelCell = new ExcelCell(cellColon[1], excelCalculateConfig.getExcelIdTypeEnum(), currentSheet);
                     resultList.addAll(excelEntity.getExcelCellValueList(startExcelCell, endExcelCell));
                 } else {
                     // Not Colon parameter processing
-                    List<String> cellStrList = properties.getCellStrListByFormula(parameter);
+                    List<String> cellStrList = excelCalculateConfig.getCellStrListByFormula(parameter);
                     Map<String, String> cellAndValue = excelEntity.getCellStrAndValueMap(cellStrList);
                     resultList.add(ExcelUtil.functionCalculate(parameter, cellAndValue));
                 }
@@ -314,13 +280,13 @@ public class ExcelFunction<T> {
             return this.leftIndex < leftIndex && this.rightIndex > rightIndex;
         }
 
-        public ExcelFunctionNode(String function, String parameters, Integer leftIndex, Integer rightIndex, ExcelEntityProperties properties) {
+        public ExcelFunctionNode(String function, String parameters, Integer leftIndex, Integer rightIndex, ExcelCalculateConfig excelCalculateConfig) {
             this.function = function;
             this.parameters = parameters;
             this.leftIndex = leftIndex;
             this.rightIndex = rightIndex;
             this.functionName = function.substring(0, function.length() - parameters.length() - 2);
-            this.properties = properties;
+            this.excelCalculateConfig = excelCalculateConfig;
         }
 
         public String getFunction() {
@@ -351,12 +317,12 @@ public class ExcelFunction<T> {
             return rightIndex;
         }
 
-        public ExcelEntityProperties getProperties() {
-            return properties;
+        public ExcelCalculateConfig getExcelCalculateConfig() {
+            return excelCalculateConfig;
         }
 
-        public void setProperties(ExcelEntityProperties properties) {
-            this.properties = properties;
+        public void setExcelCalculateConfig(ExcelCalculateConfig excelCalculateConfig) {
+            this.excelCalculateConfig = excelCalculateConfig;
         }
 
         public List<ExcelFunctionNode<T>> getExcelFunctionNodeList() {
@@ -372,7 +338,7 @@ public class ExcelFunction<T> {
                     ", value='" + value + '\'' +
                     ", leftIndex=" + leftIndex +
                     ", rightIndex=" + rightIndex +
-                    ", properties=" + properties +
+                    ", properties=" + excelCalculateConfig +
                     ", excelFunctionNodeList=" + excelFunctionNodeList +
                     '}';
         }

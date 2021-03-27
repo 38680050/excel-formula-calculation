@@ -2,7 +2,7 @@ package com.wsbxd.excel.formula.calculation.common.util;
 
 import com.wsbxd.excel.formula.calculation.common.cell.enums.ExcelCellTypeEnum;
 import com.wsbxd.excel.formula.calculation.common.constant.ExcelConstant;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -33,7 +33,7 @@ public class ExcelUtil {
     private static final int BAD_DATE = -1;
     public static final long DAY_MILLISECONDS = SECONDS_PER_DAY * 1000L;
 
-    public static <T> HashMap<String, ExcelCellTypeEnum> parseColumnAndType(T t, ExcelEntityProperties properties) {
+    public static <T> HashMap<String, ExcelCellTypeEnum> parseColumnAndType(T t, ExcelCalculateConfig properties) {
         HashMap<String, ExcelCellTypeEnum> columnAndTypeMap = new HashMap<>();
         String cellTypes = ExcelReflectUtil.getValue(t, properties.getCellTypesField());
         if (ExcelStrUtil.isNotBlank(cellTypes)) {

@@ -3,7 +3,7 @@ package com.wsbxd.excel.formula.calculation.common.calculation.formula;
 import com.wsbxd.excel.formula.calculation.common.calculation.function.ExcelFunction;
 import com.wsbxd.excel.formula.calculation.common.cell.entity.ExcelCell;
 import com.wsbxd.excel.formula.calculation.common.interfaces.IExcelEntity;
-import com.wsbxd.excel.formula.calculation.common.prop.ExcelEntityProperties;
+import com.wsbxd.excel.formula.calculation.common.config.ExcelCalculateConfig;
 import com.wsbxd.excel.formula.calculation.common.util.ExcelUtil;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ExcelFormula<T> {
     /**
      * Excel 实体类 数据属性
      */
-    private final ExcelEntityProperties properties;
+    private final ExcelCalculateConfig properties;
 
     /**
      * Excel 公式
@@ -46,7 +46,7 @@ public class ExcelFormula<T> {
      * @param formula      公式
      * @param properties   Excel 实体类 数据属性
      */
-    public ExcelFormula(String currentSheet, String formula, ExcelEntityProperties properties) {
+    public ExcelFormula(String currentSheet, String formula, ExcelCalculateConfig properties) {
         this.properties = properties;
         //返回单元格
         Matcher matcher = this.properties.getReturnCellPattern().matcher(formula);
@@ -95,7 +95,7 @@ public class ExcelFormula<T> {
         return excelFunction;
     }
 
-    public ExcelEntityProperties getProperties() {
+    public ExcelCalculateConfig getProperties() {
         return properties;
     }
 

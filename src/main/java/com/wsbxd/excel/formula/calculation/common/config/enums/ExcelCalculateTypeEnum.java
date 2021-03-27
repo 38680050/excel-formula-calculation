@@ -1,4 +1,4 @@
-package com.wsbxd.excel.formula.calculation.common.prop.enums;
+package com.wsbxd.excel.formula.calculation.common.config.enums;
 
 /**
  * description: Excel 计算类型枚举
