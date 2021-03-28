@@ -19,23 +19,48 @@ import java.util.*;
 public class ExcelUtil {
 
     /**
-     * CALCULATE ENGINE
+     * JavaScript 计算引擎
      */
     private final static ScriptEngine CALCULATE_ENGINE = new ScriptEngineManager().getEngineByName("JavaScript");
 
+    /**
+     * 每分钟60秒
+     */
     public static final int SECONDS_PER_MINUTE = 60;
+
+    /**
+     * 每小时60分钟
+     */
     public static final int MINUTES_PER_HOUR = 60;
+
+    /**
+     * 每天24小时
+     */
     public static final int HOURS_PER_DAY = 24;
+
+    /**
+     * 每天86,400秒
+     */
     public static final int SECONDS_PER_DAY = (HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+
     /**
      * 用于指定日期无效
      */
     private static final int BAD_DATE = -1;
+
     public static final long DAY_MILLISECONDS = SECONDS_PER_DAY * 1000L;
 
-    public static <T> HashMap<String, ExcelCellTypeEnum> parseColumnAndType(T t, ExcelCalculateConfig properties) {
+    /**
+     * 解析行内单元格类型
+     *
+     * @param t                    行实体类
+     * @param excelCalculateConfig Excel 计算配置
+     * @param <T>                  <T>
+     * @return 行内单元格类型
+     */
+    public static <T> Map<String, ExcelCellTypeEnum> parseColumnAndType(T t, ExcelCalculateConfig excelCalculateConfig) {
         HashMap<String, ExcelCellTypeEnum> columnAndTypeMap = new HashMap<>();
-        String cellTypes = ExcelReflectUtil.getValue(t, properties.getCellTypesField());
+        String cellTypes = ExcelReflectUtil.getValue(t, excelCalculateConfig.getCellTypesField());
         if (ExcelStrUtil.isNotBlank(cellTypes)) {
             for (String columnAndType : cellTypes.split(ExcelConstant.SEMICOLON)) {
                 String[] columnAndTypeId = columnAndType.split(ExcelConstant.MINUS);
@@ -163,8 +188,7 @@ public class ExcelUtil {
         return calendar.getTime();
     }
 
-    private static void setCalendar(Calendar calendar, int wholeDays,
-                                    int millisecondsInDay, boolean use1904windowing) {
+    private static void setCalendar(Calendar calendar, int wholeDays, int millisecondsInDay, boolean use1904windowing) {
         int startYear = 1900;
         // Excel认为2/29/1900是有效日期，但不是
         int dayAdjust = -1;
@@ -210,7 +234,7 @@ public class ExcelUtil {
             // 目前先把空作为0处理
             String value = cellAndValue.getValue();
             if (ExcelStrUtil.isBlank(value)) {
-                value = ExcelConstant.ZERO;
+                value = ExcelConstant.ZERO_STR;
             }
             formula = formula.replace(cellAndValue.getKey(), value);
         }
@@ -221,7 +245,7 @@ public class ExcelUtil {
     public static String calculate(String formula) {
         String result;
         //如果是错误值就直接返回不用计算
-        if (ExcelConstant.EXCEL_ERROR_VALUE.contains(formula)) {
+        if (ExcelConstant.EXCEL_ERROR_VALUE_LIST.contains(formula)) {
             return formula;
         }
         //=必须处理成==才能判断是否相等

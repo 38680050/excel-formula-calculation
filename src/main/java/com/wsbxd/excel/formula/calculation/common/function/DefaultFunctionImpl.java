@@ -42,7 +42,7 @@ public class DefaultFunctionImpl implements IFunction {
     public String IF(List<String> valueList) {
         String flag = valueList.get(0);
         //true 或 != 0 都走 valueList.get(1)
-        if (ExcelConstant.BIG_CASE_TRUE.equals(flag) || (!ExcelConstant.TRUE_AND_FALSE.contains(flag) && !ExcelConstant.ZERO.equals(flag))) {
+        if (ExcelConstant.BIG_CASE_TRUE.equals(flag) || (!ExcelConstant.BIG_TRUE_AND_FALSE.contains(flag) && !ExcelConstant.ZERO_STR.equals(flag))) {
             return ExcelStrUtil.isNotBlank(valueList.get(1)) ? valueList.get(1) : "0";
         } else {
             return valueList.size() > 2 ? ExcelStrUtil.isNotBlank(valueList.get(2)) ? valueList.get(2) : "0" : ExcelConstant.BIG_CASE_FALSE;

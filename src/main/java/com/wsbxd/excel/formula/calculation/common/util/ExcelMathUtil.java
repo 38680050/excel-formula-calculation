@@ -20,11 +20,16 @@ public class ExcelMathUtil {
      * 数字格式转换
      */
     public final static NumberFormat NUMBER__FORMAT = NumberFormat.getInstance();
+
     static {
         //默认转换不用千分位
         NUMBER_PERCENT_FORMAT.setGroupingUsed(false);
         NUMBER__FORMAT.setGroupingUsed(false);
     }
+
+    /**
+     * 百
+     */
     private final static BigDecimal HUNDRED = new BigDecimal(100);
 
     /**
@@ -43,6 +48,7 @@ public class ExcelMathUtil {
      * @param percentage 百分数
      * @return 数字
      */
+    @SuppressWarnings("BigDecimalMethodWithoutRoundingCalled")
     public static double percentageToNum(String percentage) {
         return new BigDecimal(percentage.replace("%", "")).divide(HUNDRED).doubleValue();
     }

@@ -49,11 +49,11 @@ public class ExcelFunction<T> {
     }
 
     /**
-     * set FunctionNodeList
+     * 添加函数节点集合
      *
-     * @param formula              original formula
-     * @param parenthesisIndexMap  Map<Constant.LEFT_PARENTHESIS.index, Constant.RIGHT_PARENTHESIS.index>
-     * @param indexFunctionNameMap Map<Index, FunctionName>
+     * @param formula              原公式
+     * @param parenthesisIndexMap  括号索引Map，Map<Constant.LEFT_PARENTHESIS.index, Constant.RIGHT_PARENTHESIS.index>
+     * @param indexFunctionNameMap 下标和函数名称Map，Map<Index, FunctionName>
      */
     private void setFunctionNodeList(String formula, Map<Integer, Integer> parenthesisIndexMap, Map<Integer, String> indexFunctionNameMap) {
         for (Map.Entry<Integer, Integer> parenthesisIndex : parenthesisIndexMap.entrySet()) {
@@ -68,9 +68,9 @@ public class ExcelFunction<T> {
     }
 
     /**
-     * add to FunctionNodeList
+     * 添加到函数节点集合
      *
-     * @param ExcelFunctionNode function Node
+     * @param ExcelFunctionNode 函数节点
      */
     public void addToFunctionNodeList(ExcelFunctionNode<T> ExcelFunctionNode) {
         if (this.excelFunctionNodeList.isEmpty()) {
@@ -87,17 +87,6 @@ public class ExcelFunction<T> {
                 this.excelFunctionNodeList.add(ExcelFunctionNode);
             }
         }
-    }
-
-    public ExcelFunction(String formula, ExcelCalculateConfig excelCalculateConfig) {
-        this(formula, DefaultFunctionImpl.class, excelCalculateConfig);
-    }
-
-    public ExcelFunction(String formula, Class<? extends IFunction> functionImplClass, ExcelCalculateConfig excelCalculateConfig) {
-        this.excelCalculateConfig = excelCalculateConfig;
-        Map<Integer, Integer> parenthesisIndexMap = getParenthesisIndexMapByFormula(formula);
-        Map<Integer, String> indexFunctionNameMap = getIndexFunctionNameMapByFormula(formula);
-        setFunctionNodeList(formula, parenthesisIndexMap, indexFunctionNameMap);
     }
 
     /**
@@ -155,6 +144,13 @@ public class ExcelFunction<T> {
         return parenthesisIndexMap;
     }
 
+    public ExcelFunction(String formula, ExcelCalculateConfig excelCalculateConfig) {
+        this.excelCalculateConfig = excelCalculateConfig;
+        Map<Integer, Integer> parenthesisIndexMap = getParenthesisIndexMapByFormula(formula);
+        Map<Integer, String> indexFunctionNameMap = getIndexFunctionNameMapByFormula(formula);
+        setFunctionNodeList(formula, parenthesisIndexMap, indexFunctionNameMap);
+    }
+
     public List<ExcelFunctionNode<T>> getExcelFunctionNodeList() {
         return excelFunctionNodeList;
     }
@@ -208,6 +204,12 @@ public class ExcelFunction<T> {
          */
         private final List<ExcelFunctionNode<T>> excelFunctionNodeList = new ArrayList<>();
 
+        /**
+         * 函数计算
+         *
+         * @param excelEntity  Excel 实体类
+         * @param currentSheet 当前页签，只有工作簿计算的时候才会使用这参数
+         */
         public void functionCalculate(IExcelEntity<T> excelEntity, String currentSheet) {
             //递归计算所有公式
             this.excelFunctionNodeList.forEach(ExcelFunctionNode -> {
@@ -215,21 +217,28 @@ public class ExcelFunction<T> {
                 parameters = parameters.replace(ExcelFunctionNode.function, ExcelFunctionNode.getValue());
             });
             List<String> valueList = parseParameters(excelEntity, currentSheet);
-            this.setValue(excelCalculateConfig.functionCalculate(this.functionName, valueList));
+            this.setValue(this.excelCalculateConfig.functionCalculate(this.functionName, valueList));
         }
 
+        /**
+         * 获取单元格参数值集合
+         *
+         * @param excelEntity  Excel 实体类
+         * @param currentSheet 当前页签，只有工作簿计算的时候才会使用这参数
+         * @return 单元格参数值集合
+         */
         private List<String> parseParameters(IExcelEntity<T> excelEntity, String currentSheet) {
             List<String> resultList = new ArrayList<>();
             for (String parameter : ExcelStrUtil.split(getParameters(), ExcelConstant.DOT_CHAT)) {
                 if (parameter.contains(ExcelConstant.COLON)) {
-                    // Colon parameter processing
+                    //冒号参数处理
                     String[] cellColon = parameter.split(ExcelConstant.COLON);
-                    ExcelCell startExcelCell = new ExcelCell(cellColon[0], excelCalculateConfig.getExcelIdTypeEnum(), currentSheet);
-                    ExcelCell endExcelCell = new ExcelCell(cellColon[1], excelCalculateConfig.getExcelIdTypeEnum(), currentSheet);
+                    ExcelCell startExcelCell = new ExcelCell(cellColon[0], this.excelCalculateConfig.getExcelIdTypeEnum(), currentSheet);
+                    ExcelCell endExcelCell = new ExcelCell(cellColon[1], this.excelCalculateConfig.getExcelIdTypeEnum(), currentSheet);
                     resultList.addAll(excelEntity.getExcelCellValueList(startExcelCell, endExcelCell));
                 } else {
-                    // Not Colon parameter processing
-                    List<String> cellStrList = excelCalculateConfig.getCellStrListByFormula(parameter);
+                    //非冒号参数处理
+                    List<String> cellStrList = this.excelCalculateConfig.getCellStrListByFormula(parameter);
                     Map<String, String> cellAndValue = excelEntity.getCellStrAndValueMap(cellStrList);
                     resultList.add(ExcelUtil.functionCalculate(parameter, cellAndValue));
                 }
@@ -238,9 +247,9 @@ public class ExcelFunction<T> {
         }
 
         /**
-         * add to FunctionNodeList
+         * 添加到函数节点集合
          *
-         * @param ExcelFunctionNode function Node
+         * @param ExcelFunctionNode 函数节点
          */
         public void setFunctionNode(ExcelFunctionNode<T> ExcelFunctionNode) {
             if (this.excelFunctionNodeList.isEmpty()) {
@@ -260,21 +269,21 @@ public class ExcelFunction<T> {
         }
 
         /**
-         * Whether to include
+         * 当前函数节点是否包括参数中的函数节点
          *
-         * @param ExcelFunctionNode function Node
-         * @return true/false
+         * @param ExcelFunctionNode 参数中的函数节点
+         * @return 是否包括
          */
         public boolean contain(ExcelFunctionNode<T> ExcelFunctionNode) {
             return this.contain(ExcelFunctionNode.getLeftIndex(), ExcelFunctionNode.getRightIndex());
         }
 
         /**
-         * Whether to include
+         * 当前函数节点的括号下标是否包括参数中函数节点的括号下标
          *
-         * @param leftIndex  left parenthesis index
-         * @param rightIndex right parenthesis index
-         * @return true/false
+         * @param leftIndex  左括号下标
+         * @param rightIndex 右括号下标
+         * @return 是否包括
          */
         public boolean contain(Integer leftIndex, Integer rightIndex) {
             return this.leftIndex < leftIndex && this.rightIndex > rightIndex;

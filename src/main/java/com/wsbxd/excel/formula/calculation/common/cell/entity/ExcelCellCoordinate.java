@@ -16,20 +16,44 @@ import java.util.regex.Pattern;
  */
 public class ExcelCellCoordinate {
 
+    /**
+     * 单元格匹配
+     */
     public final static Pattern CELL = Pattern.compile("[A-Z]+\\d+");
 
+    /**
+     * 列匹配
+     */
     public final static Pattern COLUMN = Pattern.compile("^[A-Z]+");
 
-    public final static Pattern ROW = Pattern.compile("\\d+$");
+    /**
+     * 数字行匹配
+     */
+    public final static Pattern NUMBER_ROW = Pattern.compile("\\d+$");
 
-    public static final Pattern UUID = Pattern.compile("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$");
+    /**
+     * UUID行匹配
+     */
+    public static final Pattern UUID_ROW = Pattern.compile("[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$");
 
+    /**
+     * 唯一标识
+     */
     private String id;
 
+    /**
+     * 单元格
+     */
     private String cell;
 
+    /**
+     * 页签
+     */
     private String sheet;
 
+    /**
+     * 列
+     */
     private String column;
 
     public ExcelCellCoordinate(String sheet, String column, String id) {
@@ -84,9 +108,9 @@ public class ExcelCellCoordinate {
         }
         Matcher matcherRow = null;
         if (ExcelIdTypeEnum.NUMBER.equals(excelIdTypeEnum)) {
-            matcherRow = ROW.matcher(cell);
+            matcherRow = NUMBER_ROW.matcher(cell);
         } else if (ExcelIdTypeEnum.UUID.equals(excelIdTypeEnum)) {
-            matcherRow = UUID.matcher(cell);
+            matcherRow = UUID_ROW.matcher(cell);
         }
         if (matcherRow != null && matcherRow.find()) {
             this.id = matcherRow.group();

@@ -12,18 +12,40 @@ import com.wsbxd.excel.formula.calculation.common.field.enums.ExcelIdTypeEnum;
  */
 public class ExcelCell {
 
+    /**
+     * 坐标
+     */
     private ExcelCellCoordinate coordinate;
 
+    /**
+     * 原值
+     */
     private String originalValue;
 
+    /**
+     * 基础值
+     */
     private String baseValue;
 
+    /**
+     * 单元格类型枚举
+     */
     private ExcelCellTypeEnum type;
 
+    /**
+     * 获取单元格原值
+     *
+     * @return 单元格原值
+     */
     public String getOriginalValue() {
         return this.originalValue;
     }
 
+    /**
+     * 获取单元格基础值
+     *
+     * @return 单元格基础值
+     */
     public String getBaseValue() {
         if (null == this.type) {
             throw new RuntimeException("单元格类型不能为空!");
@@ -33,10 +55,20 @@ public class ExcelCell {
         return this.baseValue;
     }
 
+    /**
+     * 设置单元格基础值
+     *
+     * @param originalValue 单元格基础值
+     */
     public void setOriginalValue(String originalValue) {
         this.originalValue = originalValue;
     }
 
+    /**
+     * 设置单元格基础值
+     *
+     * @param baseValue 单元格基础值
+     */
     public void setBaseValue(String baseValue) {
         if (null == this.type) {
             throw new RuntimeException("单元格类型不能为空!");
