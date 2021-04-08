@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2021/2/27 11:11
  */
 @SpringBootTest
-class ExcelFormulaCalculationApplicationTests {
+class ExcelFormulaCalculationTests {
 
     /**
      * 唯一标识为数字类型的计算配置
