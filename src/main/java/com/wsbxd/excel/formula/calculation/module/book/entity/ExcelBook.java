@@ -71,8 +71,10 @@ public class ExcelBook<T> implements IExcelEntity<T> {
     }
 
     @Override
-    public void updateExcelCellValue(ExcelCell excelCell) {
-        this.sheetAndSheetDataMap.get(excelCell.getSheet()).get(excelCell.getId()).get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
+    public String updateExcelCellValue(ExcelCell excelCell) {
+        ExcelCell oldExcelCell = this.sheetAndSheetDataMap.get(excelCell.getSheet()).get(excelCell.getId()).get(excelCell.getColumn());
+        oldExcelCell.setBaseValue(excelCell.getOriginalValue());
+        return oldExcelCell.getOriginalValue();
     }
 
     @Override

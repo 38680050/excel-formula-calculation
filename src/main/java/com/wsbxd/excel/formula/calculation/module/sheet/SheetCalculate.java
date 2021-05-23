@@ -35,7 +35,7 @@ public class SheetCalculate<T> implements IExcelCalculate {
         ExcelFormula<T> sheetFormula = new ExcelFormula<>(null, formula, this.excelCalculateConfig);
         String value = sheetFormula.calculate(null, this.excelSheet);
         if (null != sheetFormula.getReturnCell()) {
-            this.excelSheet.updateExcelCellValue(sheetFormula.getReturnCell());
+            value = this.excelSheet.updateExcelCellValue(sheetFormula.getReturnCell());
         }
         return value;
     }

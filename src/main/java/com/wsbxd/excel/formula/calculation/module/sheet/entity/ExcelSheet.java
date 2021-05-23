@@ -66,8 +66,10 @@ public class ExcelSheet<T> implements IExcelEntity<T> {
     }
 
     @Override
-    public void updateExcelCellValue(ExcelCell excelCell) {
-        this.idAndCellListMap.get(excelCell.getId()).get(excelCell.getColumn()).setBaseValue(excelCell.getOriginalValue());
+    public String updateExcelCellValue(ExcelCell excelCell) {
+        ExcelCell oldExcelCell = this.idAndCellListMap.get(excelCell.getId()).get(excelCell.getColumn());
+        oldExcelCell.setBaseValue(excelCell.getOriginalValue());
+        return oldExcelCell.getOriginalValue();
     }
 
     @Override

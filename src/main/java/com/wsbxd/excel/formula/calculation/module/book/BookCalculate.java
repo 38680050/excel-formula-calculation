@@ -40,7 +40,7 @@ public class BookCalculate<T> implements IExcelCalculate {
         ExcelFormula<T> bookFormula = new ExcelFormula<>(currentSheet, formula, this.excelCalculateConfig);
         String value = bookFormula.calculate(currentSheet, this.excelBook);
         if (null != bookFormula.getReturnCell()) {
-            this.excelBook.updateExcelCellValue(bookFormula.getReturnCell());
+            value = this.excelBook.updateExcelCellValue(bookFormula.getReturnCell());
         }
         return value;
     }

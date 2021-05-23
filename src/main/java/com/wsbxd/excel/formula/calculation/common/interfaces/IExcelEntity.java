@@ -52,8 +52,9 @@ public interface IExcelEntity<T> {
      * 修改单元格值
      *
      * @param excelCell 单元格
+     * @return
      */
-    void updateExcelCellValue(ExcelCell excelCell);
+    String updateExcelCellValue(ExcelCell excelCell);
 
     /**
      * 根据开始单元格和结束单元格获取这个范围中的所有单元格的基础值

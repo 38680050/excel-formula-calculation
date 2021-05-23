@@ -33,7 +33,7 @@ public class RowCalculate<T> implements IExcelCalculate {
         ExcelFormula<T> rowFormula = new ExcelFormula<T>(null, formula, this.excelCalculateConfig);
         String value = rowFormula.calculate(null, this.excelRow);
         if (null != rowFormula.getReturnCell()) {
-            this.excelRow.updateExcelCellValue(rowFormula.getReturnCell());
+            value = this.excelRow.updateExcelCellValue(rowFormula.getReturnCell());
         }
         return value;
     }
