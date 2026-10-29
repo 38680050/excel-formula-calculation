@@ -2,8 +2,9 @@
 
 在 Java 中对 POJO 数据执行仿 Excel 公式计算，支持**单行 / 单页签 / 多页签**，语法与 Excel 一致。
 
-![Java](https://img.shields.io/badge/Java-17+-orange)
-![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+[![Java](https://img.shields.io/badge/Java-17+-orange)](pom.xml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/38680050/excel-formula-calculation)](https://github.com/38680050/excel-formula-calculation/releases)
 
 ## 模块
 
@@ -21,7 +22,7 @@
 - **三级计算**：`RowCalculate` / `SheetCalculate` / `BookCalculate`
 - **可扩展函数**：内置常用逻辑 / 统计 / 数学 / 文本函数（见下），可自定义
 - **结果写回**：`integrationResult()` 将计算结果收敛到原 POJO
-- **可选 Starter**：`excel.formula.`* 配置 + 自动注册 `ExcelFormulaTemplate`
+- **可选 Starter**：`excel.formula.*` 配置 + 自动注册 `ExcelFormulaTemplate`
 
 ## 快速开始
 
@@ -182,7 +183,7 @@ excel:
     error-handle-mode: THROW   # 或 RETURN_CODE
 ```
 
-Starter **不会**按实体自动建 `ExcelCalculateConfig` Bean——实体类型在调用时传入即可：
+注入 `ExcelFormulaTemplate`，调用时传入实体类型即可：
 
 ```java
 @Service
